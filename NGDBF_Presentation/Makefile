@@ -1,8 +1,8 @@
-NAME = slides
-INSTALL_PATH_PDF = ~/public_html/slides
-INSTALL_PATH_HTML = genesys.bluezone.usu.edu:~/public_html/slides
+NAME = NGDBF_Presentation
+INSTALL_PATH_PDF = ~/public_html/slides/NGDBF_Presentation/pdf_slides
+INSTALL_PATH_HTML = ~/public_html/slides/NGDBF_Presentation
 
-all: $(NAME).pdf $(NAME).html
+all: $(NAME).pdf $(NAME).html $(NAME).tex
 
 MAKE=/usr/bin/make
 PANDOC=/usr/local/bin/pandoc
@@ -40,7 +40,7 @@ $(NAME).tex: $(sources) $(NAME).md
 $(NAME).html: $(sources) $(NAME).md
 	$(PANDOC) $(FLAGS_SLIDES_HTML)  $(NAME).md -o $@
 
-install: 
+install:
 	scp -r ./* $(INSTALL_PATH_HTML)
 	scp $(NAME).pdf $(INSTALL_PATH_PDF)
 

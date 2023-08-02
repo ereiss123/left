@@ -1,19 +1,25 @@
 
 ---
-title: 'Slides template'
-subtitle: 'A starting point for presentations'
-author: 'Chris Winstead'
+title: 'Analysis of Noisy Gradient-Descent Bit Flipping (NGDBF) Decoding Algorithm'
+subtitle: 'Using MATLAB and the PRISM Model Checking Tool'
+author: 'Eric Reiss'
 title-bg: 'figures/OldMainTower.png'
 fontsize: '10pt'
 ...
 
+# Algorithm Overview
+
+* NGDBF is part of a family of bit flipping decoding algorithms
+* Trapping sets in the LDPC code limit the decoding performance of a given algorithm
+* 
+
+# 
 
 
 # Making slides
 
 * I like HTML presentations based on [Slidy](https://www.w3.org/Talks/Tools/Slidy2/Overview.html), but many 
 prefer PDF slides produced by [\LaTeX/Beamer](https://www.ctan.org/pkg/beamer).  
-
 
 * It can be a challenge to write code in either HTML or \LaTeX.  
 
