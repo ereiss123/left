@@ -18,6 +18,22 @@
     href="https://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" />
   <link rel="stylesheet" type="text/css" media="screen, projection, print"
    href="slides.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+   var mathElements = document.getElementsByClassName("math");
+   var macros = [];
+   for (var i = 0; i < mathElements.length; i++) {
+    var texText = mathElements[i].firstChild;
+    if (mathElements[i].tagName == "SPAN") {
+     katex.render(texText.data, mathElements[i], {
+      displayMode: mathElements[i].classList.contains('display'),
+      throwOnError: false,
+      macros: macros,
+      fleqn: false
+     });
+  }}});
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
   <script src="https://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js"
     charset="utf-8" type="text/javascript"></script>
 </head>
@@ -35,22 +51,58 @@ Eric Reiss
 <div id="ldpc-codes-and-trapping-sets" class="slide section level1">
 <h1>LDPC Codes and Trapping Sets</h1>
 <ul class="incremental">
-<li></li>
+<li>Low-Density Parity Check (LDPC) codes were introduced by Gallager in 1963</li>
+<li>LDPC codes are commonly represented as sparse Tanner graph</li>
+<li>Trapping sets are a sub-set of the graph that limit the performance of decoding algorithms, creating an error-floor</li>
+<li>Absorbing sets are a special case of a trapping sets that are stable in a bit flipping decoder [1]</li>
 </ul>
+<div class="figure">
+<img src="figures/8_8_absorbing.png" style="width:20.0%" alt="" />
+<p class="caption">(8,8) Absorbing set that is dominant in the 802.3an 10GBASE-T LDPC Code [2].</p>
+</div>
 </div>
 <div id="algorithm-overview" class="slide section level1">
 <h1>Algorithm Overview</h1>
 <ul class="incremental">
 <li>NGDBF is part of a family of bit flipping decoding algorithms</li>
-<li>Improves upon the Gradient-Descent Bit Flipping (GDBF) Decoding Algorithm proposed by Wadayama et al. [1]
+<li>Improves upon the Gradient-Descent Bit Flipping (GDBF) Decoding Algorithm proposed by Wadayama et al. [3]
 <ul class="incremental">
 <li>GDBF gets “stuck” in local minima while decoding</li>
 </ul></li>
 <li>NGDBF introduces psuedo-random noise to escape local minima</li>
+<li>Algorithm steps [4]:
+<ul class="incremental">
+<li>Let <span class="math inline">H</span> be an <span class="math inline">n\times m</span> parity check matrix, <span class="math inline">N_i</span> be the adjacency for bit <span class="math inline">i</span>, <span class="math inline">M_j</span> be the adjacency for parity check <span class="math inline">j</span></li>
+<li>Given channel samples, <span class="math inline">\vec{y}</span>, initialize <span class="math inline">\vec{x}</span> to be the <span class="math inline">sign(\vec{y})</span></li>
+<li>Compute the syndrome, <span class="math inline">s_j = \prod_{i\in M_j}x_i</span></li>
+<li>Calculate the energy for bit i, <span class="math inline">E_i = y_ix_i+w\sum_{j\in N_i}s_j + z_i</span>, where w is i.i.d white noise and <span class="math inline">z_i</span> is a zero mean noise pertubation</li>
+<li>Given a threshold <span class="math inline">\theta</span> flip bit <span class="math inline">i</span> if <span class="math inline">E_i &lt; \theta</span></li>
+</ul></li>
 </ul>
 </div>
-<div id="section" class="slide section level1">
-<h1></h1>
+<div id="model-construction" class="slide section level1">
+<h1>Model Construction</h1>
+<ul class="incremental">
+<li>The Markov Chain structure used in the tool was proposed in [1]</li>
+<li>For a given (a,b) trapping set, the state space is described by the a-bit binary representation of the numbers from 0 to <span class="math inline">2^a-1</span>
+<ul class="incremental">
+<li>For example, the (3,3) trapping set would have 8 states, 000 - 111</li>
+<li>A transition from 010 to 000 implies that the middle bit flipped</li>
+</ul></li>
+<li>Transistion</li>
+</ul>
+</div>
+<div id="matlab-tool" class="slide section level1">
+<h1>MATLAB Tool</h1>
+</div>
+<div id="sources" class="slide section level1">
+<h1>Sources</h1>
+<ul class="incremental">
+<li>[1] Tasnuva Dissertation</li>
+<li>[2] T. Tithi, C. Winstead, and G. Sundararajan, Gopalakrishnan, “Decoding LDPC codes via Noisy Gradient Descent Bit-Flipping with Re-Decoding”, 2015.</li>
+<li>[3] T. wadayama, K. Nakamura, M. Yagita, Y. Funahashi, S. Usami, and I. Takumi, “Gradient descent bit flipping algorithms for decoding LDPC codes”, <em>Communications, IEEE Transactions on</em>, vol. 58, no. 6, pp. 1610-1614, 2010.</li>
+<li>[4] NGDBF demo</li>
+</ul>
 </div>
 <div id="making-slides" class="slide section level1">
 <h1>Making slides</h1>
