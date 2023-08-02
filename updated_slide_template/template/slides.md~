@@ -1,0 +1,31 @@
+
+---
+title: 'Slides template'
+subtitle: 'A starting point for presentations'
+author: 'Chris Winstead'
+title-bg: 'figures/OldMainTower.png'
+...
+
+
+
+# Making slides
+
+* I like [Slidy] html presentations, but many prefer \LaTeX/Beamer presentations
+in PDF format. So this template is designed to:
+
+   - Produce html output based on slidy
+   - Produce matching PDF output based on \LaTeX/Beamer
+
+
+# Methods
+
+* Slides are written using [Markdown]() and compiled with [Pandoc]().
+* Procedure
+   1. Prepare slides in a text document using Markdown syntax.
+   2. Place aby images in the `figures/` subdirectory.
+   3. Edit the included `Makefile` to provide the presentation name and other details.
+   4. Build the presentation by running `make`
+
+
+
+

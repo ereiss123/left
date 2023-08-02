@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+  \begin{axis}[
+      width=8cm,
+      height=4cm,
+      xlabel={Time (s)},
+      ylabel={Voltage (mV)},
+      xmin=0,
+      xmax=10
+      ]
+    \addplot+[no marks,domain=0:10,samples=100] {5*sin(deg(3*x))};
+  \end{axis}
+\end{tikzpicture}

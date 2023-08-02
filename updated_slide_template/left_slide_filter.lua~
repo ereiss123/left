@@ -1,0 +1,15 @@
+return {
+  {
+    Str = function (elem)
+      if elem.text == "||*" then
+        return pandoc.Str "<div class=\"row\"><div class=\"column\">"
+      else if elem.text == "||+" then
+        return pandoc.Str "</div><div class=\"column\">"
+      else if elem.text == "*||" then
+        return pandoc.Str "</div></div">"
+      else
+        return elem
+      end
+    end,
+  }
+}

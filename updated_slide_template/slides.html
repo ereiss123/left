@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Chris Winstead" />
+  <title>Slides template</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+    href="https://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" />
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="slides.css" />
+  <script src="https://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js"
+    charset="utf-8" type="text/javascript"></script>
+</head>
+<body>
+  <div class="background titlepage">
+    <img src="figures/OldMainTower.png"/>
+  </div>
+<div class="slide titlepage">
+  <h1 class="title">Slides template</h1>
+  <p class="subtitle">A starting point for presentations</p>
+  <p class="author">
+Chris Winstead
+  </p>
+</div>
+<div id="making-slides" class="slide section level1">
+<h1>Making slides</h1>
+<ul class="incremental">
+<li><p>I like HTML presentations based on <a href="https://www.w3.org/Talks/Tools/Slidy2/Overview.html">Slidy</a>, but many prefer PDF slides produced by <a href="https://www.ctan.org/pkg/beamer">/Beamer</a>.</p></li>
+<li><p>It can be a challenge to write code in either HTML or .</p></li>
+<li><p><a href="">Markdown and Pandoc</a> provide an easy text-based syntax for writing papers and presentations.<br />
+</p></li>
+<li><p>This template is designed to work with Pandoc to simultaneously:</p>
+<ul class="incremental">
+<li>Produce html output based on slidy</li>
+<li>Produce matching PDF output based on /Beamer</li>
+</ul></li>
+</ul>
+</div>
+<div id="procedure" class="slide section level1">
+<h1>Procedure</h1>
+<ol class="incremental" style="list-style-type: decimal">
+<li>Prepare slides in a text document using Markdown syntax.</li>
+<li>Place any images in the <code>figures/</code> subdirectory.</li>
+<li>Edit the included <code>Makefile</code> to specify the presentation name and other details.</li>
+<li>Build the presentation by running <code>make</code></li>
+</ol>
+</div>
+<div id="including-figures" class="slide section level1">
+<h1>Including Figures</h1>
+<p>To include a figure using Markdown, use this syntax:</p>
+<pre><code>![Optional figure caption.](figures/example.png){width=60%}</code></pre>
+<p>Result:</p>
+<div class="figure">
+<img src="figures/example.png" style="width:60.0%" alt="" />
+<p class="caption">Optional figure caption.</p>
+</div>
+</div>
+<div id="two-column-slides" class="slide section level1">
+<h1>Two-Column Slides</h1>
+<p>Starting two-column mode:</p>
+<p><div class="row"><div class="column"></p>
+<p>Here is a column.</p>
+<ul class="incremental">
+<li>Text.</li>
+<li>More text.</li>
+<li>Description.</li>
+<li>Discussion.</li>
+</ul>
+<p></div><div class="column"></p>
+<p>And another column.</p>
+<div class="figure">
+<img src="figures/tall_figure.png" style="width:20.0%" alt="" />
+<p class="caption">A tall figure.</p>
+</div>
+<p></div></div></p>
+<p>Columns are now over.</p>
+</div>
+<div id="two-column-slides-1" class="slide section level1">
+<h1>Two-Column Slides</h1>
+<p>Starting two-column mode:</p>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p>Here is a column.</p>
+<ul class="incremental">
+<li>Text.</li>
+<li>More text.</li>
+<li>Description.</li>
+<li>Discussion.</li>
+</ul>
+</div><div class="column" style="width:40%;">
+<p>And another column.</p>
+<div class="figure">
+<img src="figures/tall_figure.png" style="width:20.0%" alt="" />
+<p class="caption">A tall figure.</p>
+</div>
+</div>
+</div>
+<p>Columns are now over.</p>
+</div>
+</body>
+</html>
