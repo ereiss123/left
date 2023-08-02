@@ -17,8 +17,12 @@ fontsize: '10pt'
 * Improves upon the Gradient-Descent Bit Flipping (GDBF) Decoding Algorithm proposed by Wadayama et al. [1]
    - GDBF gets "stuck" in local minima while decoding
 * NGDBF introduces psuedo-random noise to escape local minima
-* The bit-flipping decision is determined by the energy equation calculated for each bit
-   $ E_k = x_ky_k+w_k\sum_{i\in M(k)}s_i+q_k $
+* Algorithm steps [2]:
+   - Let $H$ be an $n\times m$ parity check matrix, $N_i$ be the adjacency for bit $i$, $M_j$ be the adjacency for parity check $j$ 
+   - Given channel samples, $\vec{y}$, initialize $\vec{x}$ to be the $sign(\vec{y})$
+   - Compute the syndrome, $s_j = \prod_{i\in M_j}x_i$
+   - Calculate the energy for bit i, $E_i = y_ix_i+w\sum_{j\in N_i}s_j + z_i$, where w is i.i.d white noise and $z_i$ is a zero mean noise pertubation
+   - Given a threshold $\theta$ flip bit $i$ if $E_i < \theta$
 
 # 
 
