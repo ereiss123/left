@@ -7,11 +7,18 @@ title-bg: 'figures/OldMainTower.png'
 fontsize: '10pt'
 ...
 
+# LDPC Codes and Trapping Sets
+
+* 
+
 # Algorithm Overview
 
 * NGDBF is part of a family of bit flipping decoding algorithms
-* Trapping sets in the LDPC code limit the decoding performance of a given algorithm
-* 
+* Improves upon the Gradient-Descent Bit Flipping (GDBF) Decoding Algorithm proposed by Wadayama et al. [1]
+   - GDBF gets "stuck" in local minima while decoding
+* NGDBF introduces psuedo-random noise to escape local minima
+* The bit-flipping decision is determined by the energy equation calculated for each bit
+   $ E_k = x_ky_k+w_k\sum_{i\in M(k)}s_i+q_k $
 
 # 
 

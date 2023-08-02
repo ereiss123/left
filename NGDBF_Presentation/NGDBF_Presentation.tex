@@ -33,7 +33,7 @@
 }
 \usepackage{hyperref}
 \hypersetup{
-            pdftitle={Noisy Gradient-Descent Bit Flipping (NGDBF) Decoding Algorithm},
+            pdftitle={Analysis of Noisy Gradient-Descent Bit Flipping (NGDBF) Decoding Algorithm},
             pdfauthor={Eric Reiss},
             pdfborder={0 0 0},
             breaklinks=true}
@@ -92,9 +92,10 @@
 \makeatother
 
 
-\title{Noisy Gradient-Descent Bit Flipping (NGDBF) Decoding Algorithm}
+\title{Analysis of Noisy Gradient-Descent Bit Flipping (NGDBF) Decoding
+Algorithm}
 \providecommand{\subtitle}[1]{}
-\subtitle{A probabilistic decoding algorithm}
+\subtitle{Using MATLAB and the PRISM Model Checking Tool}
 \author{Eric Reiss}
 \date{}
 
@@ -117,11 +118,15 @@
 }
 
 
+\pgfdeclareimage[]{mybackground}{figures/OldMainTower.png}
 
 \setbeamertemplate{title page}{
 
   \begin{picture}(0,0)
     
+     \put(50,-100){%
+      \pgfuseimage{mybackground}
+    }
      
     \put(0,-40.7){%
       \begin{minipage}[b][45mm][t]{226mm}
@@ -159,6 +164,38 @@
 
 \begin{document}
 \frame{\titlepage}
+
+\begin{frame}{LDPC Codes and Trapping Sets}
+\protect\hypertarget{ldpc-codes-and-trapping-sets}{}
+\begin{itemize}[<+->]
+\tightlist
+\item
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Algorithm Overview}
+\protect\hypertarget{algorithm-overview}{}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  NGDBF is part of a family of bit flipping decoding algorithms
+\item
+  Improves upon the Gradient-Descent Bit Flipping (GDBF) Decoding
+  Algorithm proposed by Wadayama et al.~{[}1{]}
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    GDBF gets ``stuck'' in local minima while decoding
+  \end{itemize}
+\item
+  NGDBF introduces psuedo-random noise to escape local minima
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\protect\hypertarget{section}{}
+\end{frame}
 
 \begin{frame}{Making slides}
 \protect\hypertarget{making-slides}{}

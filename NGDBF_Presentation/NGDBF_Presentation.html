@@ -7,7 +7,7 @@
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Eric Reiss" />
-  <title>Noisy Gradient-Descent Bit Flipping (NGDBF) Decoding Algorithm</title>
+  <title>Analysis of Noisy Gradient-Descent Bit Flipping (NGDBF) Decoding Algorithm</title>
   <style type="text/css">
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -22,12 +22,35 @@
     charset="utf-8" type="text/javascript"></script>
 </head>
 <body>
+  <div class="background titlepage">
+    <img src="figures/OldMainTower.png"/>
+  </div>
 <div class="slide titlepage">
-  <h1 class="title">Noisy Gradient-Descent Bit Flipping (NGDBF) Decoding Algorithm</h1>
-  <p class="subtitle">A probabilistic decoding algorithm</p>
+  <h1 class="title">Analysis of Noisy Gradient-Descent Bit Flipping (NGDBF) Decoding Algorithm</h1>
+  <p class="subtitle">Using MATLAB and the PRISM Model Checking Tool</p>
   <p class="author">
 Eric Reiss
   </p>
+</div>
+<div id="ldpc-codes-and-trapping-sets" class="slide section level1">
+<h1>LDPC Codes and Trapping Sets</h1>
+<ul class="incremental">
+<li></li>
+</ul>
+</div>
+<div id="algorithm-overview" class="slide section level1">
+<h1>Algorithm Overview</h1>
+<ul class="incremental">
+<li>NGDBF is part of a family of bit flipping decoding algorithms</li>
+<li>Improves upon the Gradient-Descent Bit Flipping (GDBF) Decoding Algorithm proposed by Wadayama et al. [1]
+<ul class="incremental">
+<li>GDBF gets “stuck” in local minima while decoding</li>
+</ul></li>
+<li>NGDBF introduces psuedo-random noise to escape local minima</li>
+</ul>
+</div>
+<div id="section" class="slide section level1">
+<h1></h1>
 </div>
 <div id="making-slides" class="slide section level1">
 <h1>Making slides</h1>
