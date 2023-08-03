@@ -95,7 +95,7 @@
 \title{Analysis of Noisy Gradient-Descent Bit Flipping (NGDBF) Decoding
 Algorithm}
 \providecommand{\subtitle}[1]{}
-\subtitle{Using MATLAB and the PRISM Model Checking Tool}
+\subtitle{Using MATLAB/Octave and the PRISM Model Checking Tool}
 \author{Eric Reiss}
 \date{}
 
@@ -164,6 +164,31 @@ Algorithm}
 
 \begin{document}
 \frame{\titlepage}
+
+\begin{frame}{Overview}
+\protect\hypertarget{overview}{}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  LDPC Codes and Trappins Sets
+\item
+  Algorithm Overview
+\item
+  Model Construction
+\item
+  MATLAB/Octave Tool Overview
+\item
+  Sample Generation
+\item
+  Energy Calculation
+\item
+  Transisition Probabilities
+\item
+  Write Files and Process Output
+\item
+  Sources
+\end{itemize}
+\end{frame}
 
 \begin{frame}{LDPC Codes and Trapping Sets}
 \protect\hypertarget{ldpc-codes-and-trapping-sets}{}
@@ -249,12 +274,202 @@ LDPC Code {[}2{]}.}
     A transition from 010 to 000 implies that the middle bit flipped
   \end{itemize}
 \item
-  Transistion
+  Edge probabilities are calculated by first calculating the probability
+  that a bit flips using the cdf centered on the energy function with
+  the noise pertubation subtracted
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    \(P_{flip} = normcdf(\theta,E_i,\sigma)\)
+  \end{itemize}
+\item
+  The prbability of a transistion is then calculated by multiplying the
+  flip probabilities
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    For example, state 010 to 100, where a state is \(b_2b_1b_0\), is
+    calculated by
+    \(P_{010\rightarrow 100}=P_{b_2flip}*P_{b_1flip}*(1-P_{b_0flip})\)
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{MATLAB Tool}
-\protect\hypertarget{matlab-tool}{}
+\begin{frame}{MATLAB/Octave Tool Overiview}
+\protect\hypertarget{matlaboctave-tool-overiview}{}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Located in the USU\_stochastic\_case\_studies repository in the
+  ngdbf\_models folders, contains the following files
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    run\_ngdbf.m: Driver function that contains most of the relevant
+    code
+  \item
+    load\_trapping\_sets.m: Script containing some of the trapping sets
+    in University of Arizona's Trapping Set Ontology {[}5{]}.
+  \item
+    write\_model.m: Helper function that takes data from run\_ngdbf to
+    write a PRISM model
+  \item
+    write\_explicit\_model.m: Helper function that creates the necessary
+    files to generate an explicit PRISM model
+  \item
+    isOctave.m: Helper function to determine if the script is running on
+    Octave or MATLAB
+  \item
+    get\_error\_sample\_size.m: Helper function to calculate the number
+    of error samples needed
+  \end{itemize}
+\item
+  The tool uses channel information to programmatically generate a model
+  of the algorithm for each possible initial state
+\item
+  Three main sections of the code are
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Generate samples
+  \item
+    Calculate all energy values
+  \item
+    Calculate transition probabilities
+  \item
+    Write files and process PRISM output
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Sample Generation}
+\protect\hypertarget{sample-generation}{}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Samples are pulled from Gaussian distribution with a mean of \(1\) and
+  a standard deviation of \(\sigma=\sqrt{\frac{1}{R*10^{SNR/10}}}\),
+  where \(R\) is the code rate
+\item
+  Currently the tool generates a list of samples and sorts into valid
+  and error sample bins
+\item
+  An error sample is one that comes from the negative tail of the
+  Gaussian distribution
+\item
+  There is probably a better way to do this, and finding that is on the
+  to-do list
+\end{itemize}
+
+\begin{verbatim}
+loop_check = get_error_sample_size(sym_size);
+valid_samples = zeros(1,loop_check); % initialize valid samples
+valid_idx = 1;
+error_samples = zeros(1,loop_check); % initialize error samples
+error_idx = 1;
+while valid_idx <= loop_check || error_idx <= loop_check 
+   temp = normrnd(1,sigma); % generate samples
+   if temp > 0 % sort valid samples
+      valid_samples(valid_idx) = temp;
+      valid_idx = valid_idx +1;
+   end
+   if temp < 0 % sort error samples
+      error_samples(error_idx) = temp;
+      error_idx = error_idx+1;
+   end
+end
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Energy Calculation}
+\protect\hypertarget{energy-calculation}{}
+\begin{verbatim}
+%initialize Energy and check node matrices
+E = zeros(2^sym_size,sym_size);
+chk_nodes = ones(1, check_size);
+chk_sum = zeros(1,sym_size);
+% Calculate all possible energy values for each state
+for row = 1:2^sym_size
+   % Calculate all check nodes
+   for adj_row = 1:check_size
+         for adj_col = 1:sym_size
+            if adj_mat(adj_row,adj_col) == 1
+               chk_nodes(adj_row) = chk_nodes(adj_row)*x(row,adj_col);
+               chk_sum(adj_col) = chk_sum(adj_col)+chk_nodes(adj_row);
+            end
+         end
+   end
+   % Calculate energy values
+   for E_idx = 1:sym_size
+         E(row,E_idx) = y(E_idx)*x(row,E_idx)+w*chk_sum(E_idx);
+   end
+end
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Transition Probabilities}
+\protect\hypertarget{transition-probabilities}{}
+\begin{verbatim}
+p = ones(2^sym_size,2^sym_size);
+        % Flip probabilities calculated according to Eq 3.13 in T. Tithi
+        % dissertation (pg. 26)
+        for row = 1:2^sym_size
+            px = zeros(1,sym_size);
+            for p_idx = 1:sym_size
+                px(p_idx) = normcdf(theta,E(row,p_idx),sigma);
+            end
+            rowbin = dec2bin(row-1,sym_size);
+            for col = 1:2^sym_size
+                colbin = dec2bin(col-1,sym_size);
+                for p_idx = 1:sym_size
+                    if rowbin(p_idx) == colbin(p_idx)
+                        p(row,col) = p(row,col)*(1-px(p_idx));
+                    else
+                        p(row,col) = p(row,col)*px(p_idx);
+                    end
+                end
+            end
+        end
+        % Sanity check
+        if sum(round(sum(p.'))) ~= 2^sym_size
+            fprintf("Error: Probabilities do not sum to 1\n");
+            return;
+        end
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Write Files and Process Outputs}
+\protect\hypertarget{write-files-and-process-outputs}{}
+\begin{verbatim}
+% Process Output for transient and steady state
+if (tag(3) == 't' && tag(4) == 'r') || (tag(3) == 's' && tag(4) == 's')
+      str_idx = regexp(output,regexptranslate('wildcard','0:\(*\)=*'));
+      output = substr(output,str_idx);
+      split_output = strsplit(output,"\n"); 
+      for out_idx = 1:2^sym_size
+         str_to_parse = char(split_output(out_idx));
+         if (str_to_parse(1) >= "0") && (str_to_parse(1) <= "9")
+            temp = textscan(str_to_parse,"%d:(%d)=%f");
+            state_temp = temp{1,2};
+            p_out(idx,state_temp+1) = temp{1,3};
+         else
+            break; 
+         end
+      end
+elseif tag(3) == 'p'
+      str_idx = strfind(output,"Result");
+      output = substr(output,str_idx);
+      p_temp = textscan(output,"Result: %f (exact floating point)");
+      p_out(idx,1) = p_temp{1,1};
+else
+      % Do nothing
+end
+fprintf(file_out,"initial state: %d\n%s\n----------------------------------------------------------------------------------------------------\n\n",istate,output);
+\end{verbatim}
 \end{frame}
 
 \begin{frame}{Sources}
@@ -274,130 +489,9 @@ LDPC Code {[}2{]}.}
   no. 6, pp.~1610-1614, 2010.
 \item
   {[}4{]} NGDBF demo
+\item
+  {[}5{]} Trapping set ontology
 \end{itemize}
-\end{frame}
-
-\begin{frame}{Making slides}
-\protect\hypertarget{making-slides}{}
-\begin{itemize}[<+->]
-\item
-  I like HTML presentations based on
-  \href{https://www.w3.org/Talks/Tools/Slidy2/Overview.html}{Slidy}, but
-  many prefer PDF slides produced by
-  \href{https://www.ctan.org/pkg/beamer}{\LaTeX/Beamer}.
-\item
-  It can be a challenge to write code in either HTML or \LaTeX.
-\item
-  \href{}{Markdown and Pandoc} provide an easy text-based syntax for
-  writing papers and presentations.\\
-\item
-  This template is designed to work with Pandoc to simultaneously:
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    Produce html output based on slidy
-  \item
-    Produce matching PDF output based on \LaTeX/Beamer
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Procedure}
-\protect\hypertarget{procedure}{}
-\begin{enumerate}[<+->]
-\tightlist
-\item
-  Prepare slides in a text document using Markdown syntax.
-\item
-  Place any images in the \texttt{figures/} subdirectory.
-\item
-  Edit the included \texttt{Makefile} to specify the presentation name
-  and other details.
-\item
-  Build the presentation by running \texttt{make}
-\end{enumerate}
-\end{frame}
-
-\begin{frame}[fragile]{Including Figures}
-\protect\hypertarget{including-figures}{}
-To include a figure using Markdown, use this syntax:
-
-\begin{verbatim}
-![Optional figure caption.](figures/example.png){width=60%}
-\end{verbatim}
-
-Result:
-
-\begin{figure}
-\centering
-\includegraphics[width=0.6\textwidth,height=\textheight]{figures/example.png}
-\caption{Optional figure caption.}
-\end{figure}
-\end{frame}
-
-\begin{frame}{Two-Column Slides}
-\protect\hypertarget{two-column-slides}{}
-Starting two-column mode:
-
-Here is a column.
-
-\begin{itemize}[<+->]
-\tightlist
-\item
-  Text.
-\item
-  More text.
-\item
-  Description.
-\item
-  Discussion.
-\end{itemize}
-
-And another column.
-
-\begin{figure}
-\centering
-\includegraphics[width=0.2\textwidth,height=\textheight]{figures/tall_figure.png}
-\caption{A tall figure.}
-\end{figure}
-
-Columns are now over.
-\end{frame}
-
-\begin{frame}{Two-Column Slides}
-\protect\hypertarget{two-column-slides-1}{}
-Starting two-column mode:
-
-\begin{columns}[T]
-\begin{column}{0.4\textwidth}
-Here is a column.
-
-\begin{itemize}[<+->]
-\tightlist
-\item
-  Text.
-\item
-  More text.
-\item
-  Description.
-\item
-  Discussion.
-\end{itemize}
-\end{column}
-
-\begin{column}{0.4\textwidth}
-And another column.
-
-\begin{figure}
-\centering
-\includegraphics[width=0.2\textwidth,height=\textheight]{figures/tall_figure.png}
-\caption{A tall figure.}
-\end{figure}
-\end{column}
-\end{columns}
-
-Columns are now over.
 \end{frame}
 
 \end{document}
