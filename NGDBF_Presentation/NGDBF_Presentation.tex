@@ -170,7 +170,7 @@ Algorithm}
 \begin{itemize}[<+->]
 \tightlist
 \item
-  LDPC Codes and Trappins Sets
+  LDPC Codes and Trapping Sets
 \item
   Algorithm Overview
 \item
@@ -330,7 +330,7 @@ LDPC Code {[}2{]}.}
   The tool uses channel information to programmatically generate a model
   of the algorithm for each possible initial state
 \item
-  Three main sections of the code are
+  Four main sections of the run\_ngdbf.m are
 
   \begin{itemize}[<+->]
   \tightlist
@@ -387,6 +387,14 @@ end
 
 \begin{frame}[fragile]{Energy Calculation}
 \protect\hypertarget{energy-calculation}{}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  To create the model, all possible energy values must be calculated
+\item
+  The syndrome, called chk\_nodes here, is also calculated
+\end{itemize}
+
 \begin{verbatim}
 %initialize Energy and check node matrices
 E = zeros(2^sym_size,sym_size);
@@ -413,6 +421,12 @@ end
 
 \begin{frame}[fragile]{Transition Probabilities}
 \protect\hypertarget{transition-probabilities}{}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Using the energy calculations, the transistion matrix is generated
+\end{itemize}
+
 \begin{verbatim}
 p = ones(2^sym_size,2^sym_size);
         % Flip probabilities calculated according to Eq 3.13 in T. Tithi
@@ -444,6 +458,24 @@ p = ones(2^sym_size,2^sym_size);
 
 \begin{frame}[fragile]{Write Files and Process Outputs}
 \protect\hypertarget{write-files-and-process-outputs}{}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  The model is written using the helper functions write\_model.m and
+  write\_explicit\_model.m
+\item
+  A system call to PRISM runs either a transient analysis, steady-state
+  analysis, or a user-defined property analysis
+\item
+  The result is saved for transient and steady-state analysis
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    It works with some properties, but this needs to be expanded
+  \end{itemize}
+\end{itemize}
+
 \begin{verbatim}
 % Process Output for transient and steady state
 if (tag(3) == 't' && tag(4) == 'r') || (tag(3) == 's' && tag(4) == 's')
@@ -477,20 +509,26 @@ fprintf(file_out,"initial state: %d\n%s\n---------------------------------------
 \begin{itemize}[<+->]
 \tightlist
 \item
-  {[}1{]} Tasnuva Dissertation
+  {[}1{]} T. Tithi, ``Error-Floors of the 802.3an LDPC Code for Noise
+  Assisted Decoding'', \emph{All Graduate Theses and Dissertations},
+  pp.~7465, 2019.
 \item
-  {[}2{]} T. Tithi, C. Winstead, and G. Sundararajan, Gopalakrishnan,
-  ``Decoding LDPC codes via Noisy Gradient Descent Bit-Flipping with
-  Re-Decoding'', 2015.
+  {[}2{]} T. Tithi, C. Winstead, and G. Sundararajan, ``Decoding LDPC
+  codes via Noisy Gradient Descent Bit-Flipping with Re-Decoding'',
+  2015.
 \item
-  {[}3{]} T. wadayama, K. Nakamura, M. Yagita, Y. Funahashi, S. Usami,
+  {[}3{]} T. Wadayama, K. Nakamura, M. Yagita, Y. Funahashi, S. Usami,
   and I. Takumi, ``Gradient descent bit flipping algorithms for decoding
   LDPC codes'', \emph{Communications, IEEE Transactions on}, vol.~58,
   no. 6, pp.~1610-1614, 2010.
 \item
-  {[}4{]} NGDBF demo
+  {[}4{]} C. Winstead and E. Boutillon, ``Hardware Demonstration of
+  Noisy Gradient Descent Bit Flipping (NGDBF) for IEEE 802.3 Standard
+  Code''.
 \item
-  {[}5{]} Trapping set ontology
+  {[}5{]} ``Trapping Set Ontology'',
+  https://uweb.engr.arizona.edu/\textasciitilde vasiclab/Projects/CodingTheory/TrappingSetOntology.html
+  (accessed Aug 4, 2023).
 \end{itemize}
 \end{frame}
 

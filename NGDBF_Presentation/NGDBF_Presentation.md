@@ -7,7 +7,7 @@ title-bg: 'figures/OldMainTower.png'
 fontsize: '10pt'
 ...
 # Overview
-* LDPC Codes and Trappins Sets
+* LDPC Codes and Trapping Sets
 * Algorithm Overview
 * Model Construction
 * MATLAB/Octave Tool Overview
@@ -58,7 +58,7 @@ fontsize: '10pt'
    - isOctave.m: Helper function to determine if the script is running on Octave or MATLAB
    - get_error_sample_size.m: Helper function to calculate the number of error samples needed
 * The tool uses channel information to programmatically generate a model of the algorithm for each possible initial state
-* Three main sections of the code are
+* Four main sections of the run_ngdbf.m are
    - Generate samples
    - Calculate all energy values
    - Calculate transition probabilities
@@ -89,6 +89,9 @@ end
 ```
 # Energy Calculation
 
+* To create the model, all possible energy values must be calculated
+* The syndrome, called chk_nodes here, is also calculated
+
 ```
 %initialize Energy and check node matrices
 E = zeros(2^sym_size,sym_size);
@@ -112,6 +115,8 @@ for row = 1:2^sym_size
 end
 ```
 # Transition Probabilities
+
+* Using the energy calculations, the transistion matrix is generated
 
 ```
 p = ones(2^sym_size,2^sym_size);
@@ -143,6 +148,12 @@ p = ones(2^sym_size,2^sym_size);
 
 # Write Files and Process Outputs
 
+* The model is written using the helper functions write_model.m and write_explicit_model.m
+* A system call to PRISM runs either a transient analysis, steady-state analysis, or a user-defined property analysis
+* The result is saved for transient and steady-state analysis
+   - It works with some properties, but this needs to be expanded
+
+
 ```
 % Process Output for transient and steady state
 if (tag(3) == 't' && tag(4) == 'r') || (tag(3) == 's' && tag(4) == 's')
@@ -171,9 +182,9 @@ fprintf(file_out,"initial state: %d\n%s\n---------------------------------------
 ```
 
 # Sources
- * [1] Tasnuva Dissertation 
- * [2] T. Tithi, C. Winstead, and G. Sundararajan, Gopalakrishnan, "Decoding LDPC codes via Noisy Gradient Descent Bit-Flipping with Re-Decoding", 2015.
- * [3] T. wadayama, K. Nakamura, M. Yagita, Y. Funahashi, S. Usami, and I. Takumi, "Gradient descent bit flipping algorithms for decoding LDPC codes", _Communications, IEEE Transactions on_, vol. 58, no. 6, pp. 1610-1614, 2010.
- * [4] NGDBF demo 
- * [5] Trapping set ontology
+ * [1] T. Tithi, "Error-Floors of the 802.3an LDPC Code for Noise Assisted Decoding", _All Graduate Theses and Dissertations_, pp. 7465, 2019.
+ * [2] T. Tithi, C. Winstead, and G. Sundararajan, "Decoding LDPC codes via Noisy Gradient Descent Bit-Flipping with Re-Decoding", 2015.
+ * [3] T. Wadayama, K. Nakamura, M. Yagita, Y. Funahashi, S. Usami, and I. Takumi, "Gradient descent bit flipping algorithms for decoding LDPC codes", _Communications, IEEE Transactions on_, vol. 58, no. 6, pp. 1610-1614, 2010.
+ * [4] C. Winstead and E. Boutillon, "Hardware Demonstration of Noisy Gradient Descent Bit Flipping (NGDBF) for IEEE 802.3 Standard Code".
+ * [5] "Trapping Set Ontology", https://uweb.engr.arizona.edu/~vasiclab/Projects/CodingTheory/TrappingSetOntology.html (accessed Aug 4, 2023).
   

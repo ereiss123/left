@@ -51,7 +51,7 @@ Eric Reiss
 <div id="overview" class="slide section level1">
 <h1>Overview</h1>
 <ul class="incremental">
-<li>LDPC Codes and Trappins Sets</li>
+<li>LDPC Codes and Trapping Sets</li>
 <li>Algorithm Overview</li>
 <li>Model Construction</li>
 <li>MATLAB/Octave Tool Overview</li>
@@ -126,7 +126,7 @@ Eric Reiss
 <li>get_error_sample_size.m: Helper function to calculate the number of error samples needed</li>
 </ul></li>
 <li>The tool uses channel information to programmatically generate a model of the algorithm for each possible initial state</li>
-<li>Three main sections of the code are
+<li>Four main sections of the run_ngdbf.m are
 <ul class="incremental">
 <li>Generate samples</li>
 <li>Calculate all energy values</li>
@@ -162,6 +162,10 @@ end</code></pre>
 </div>
 <div id="energy-calculation" class="slide section level1">
 <h1>Energy Calculation</h1>
+<ul class="incremental">
+<li>To create the model, all possible energy values must be calculated</li>
+<li>The syndrome, called chk_nodes here, is also calculated</li>
+</ul>
 <pre><code>%initialize Energy and check node matrices
 E = zeros(2^sym_size,sym_size);
 chk_nodes = ones(1, check_size);
@@ -185,6 +189,9 @@ end</code></pre>
 </div>
 <div id="transition-probabilities" class="slide section level1">
 <h1>Transition Probabilities</h1>
+<ul class="incremental">
+<li>Using the energy calculations, the transistion matrix is generated</li>
+</ul>
 <pre><code>p = ones(2^sym_size,2^sym_size);
         % Flip probabilities calculated according to Eq 3.13 in T. Tithi
         % dissertation (pg. 26)
@@ -213,6 +220,14 @@ end</code></pre>
 </div>
 <div id="write-files-and-process-outputs" class="slide section level1">
 <h1>Write Files and Process Outputs</h1>
+<ul class="incremental">
+<li>The model is written using the helper functions write_model.m and write_explicit_model.m</li>
+<li>A system call to PRISM runs either a transient analysis, steady-state analysis, or a user-defined property analysis</li>
+<li>The result is saved for transient and steady-state analysis
+<ul class="incremental">
+<li>It works with some properties, but this needs to be expanded</li>
+</ul></li>
+</ul>
 <pre><code>% Process Output for transient and steady state
 if (tag(3) == &#39;t&#39; &amp;&amp; tag(4) == &#39;r&#39;) || (tag(3) == &#39;s&#39; &amp;&amp; tag(4) == &#39;s&#39;)
       str_idx = regexp(output,regexptranslate(&#39;wildcard&#39;,&#39;0:\(*\)=*&#39;));
@@ -241,11 +256,11 @@ fprintf(file_out,&quot;initial state: %d\n%s\n----------------------------------
 <div id="sources" class="slide section level1">
 <h1>Sources</h1>
 <ul class="incremental">
-<li>[1] Tasnuva Dissertation</li>
-<li>[2] T. Tithi, C. Winstead, and G. Sundararajan, Gopalakrishnan, “Decoding LDPC codes via Noisy Gradient Descent Bit-Flipping with Re-Decoding”, 2015.</li>
-<li>[3] T. wadayama, K. Nakamura, M. Yagita, Y. Funahashi, S. Usami, and I. Takumi, “Gradient descent bit flipping algorithms for decoding LDPC codes”, <em>Communications, IEEE Transactions on</em>, vol. 58, no. 6, pp. 1610-1614, 2010.</li>
-<li>[4] NGDBF demo</li>
-<li>[5] Trapping set ontology</li>
+<li>[1] T. Tithi, “Error-Floors of the 802.3an LDPC Code for Noise Assisted Decoding”, <em>All Graduate Theses and Dissertations</em>, pp. 7465, 2019.</li>
+<li>[2] T. Tithi, C. Winstead, and G. Sundararajan, “Decoding LDPC codes via Noisy Gradient Descent Bit-Flipping with Re-Decoding”, 2015.</li>
+<li>[3] T. Wadayama, K. Nakamura, M. Yagita, Y. Funahashi, S. Usami, and I. Takumi, “Gradient descent bit flipping algorithms for decoding LDPC codes”, <em>Communications, IEEE Transactions on</em>, vol. 58, no. 6, pp. 1610-1614, 2010.</li>
+<li>[4] C. Winstead and E. Boutillon, “Hardware Demonstration of Noisy Gradient Descent Bit Flipping (NGDBF) for IEEE 802.3 Standard Code”.</li>
+<li>[5] “Trapping Set Ontology”, https://uweb.engr.arizona.edu/~vasiclab/Projects/CodingTheory/TrappingSetOntology.html (accessed Aug 4, 2023).</li>
 </ul>
 </div>
 </body>
