@@ -186,6 +186,8 @@ Algorithm}
 \item
   Write Files and Process Output
 \item
+  What's Next
+\item
   Sources
 \end{itemize}
 \end{frame}
@@ -429,30 +431,30 @@ end
 
 \begin{verbatim}
 p = ones(2^sym_size,2^sym_size);
-        % Flip probabilities calculated according to Eq 3.13 in T. Tithi
-        % dissertation (pg. 26)
-        for row = 1:2^sym_size
-            px = zeros(1,sym_size);
-            for p_idx = 1:sym_size
-                px(p_idx) = normcdf(theta,E(row,p_idx),sigma);
+% Flip probabilities calculated according to Eq 3.13 in T. Tithi
+% dissertation (pg. 26)
+for row = 1:2^sym_size
+   px = zeros(1,sym_size);
+   for p_idx = 1:sym_size
+         px(p_idx) = normcdf(theta,E(row,p_idx),sigma);
+   end
+   rowbin = dec2bin(row-1,sym_size);
+   for col = 1:2^sym_size
+         colbin = dec2bin(col-1,sym_size);
+         for p_idx = 1:sym_size
+            if rowbin(p_idx) == colbin(p_idx)
+               p(row,col) = p(row,col)*(1-px(p_idx));
+            else
+               p(row,col) = p(row,col)*px(p_idx);
             end
-            rowbin = dec2bin(row-1,sym_size);
-            for col = 1:2^sym_size
-                colbin = dec2bin(col-1,sym_size);
-                for p_idx = 1:sym_size
-                    if rowbin(p_idx) == colbin(p_idx)
-                        p(row,col) = p(row,col)*(1-px(p_idx));
-                    else
-                        p(row,col) = p(row,col)*px(p_idx);
-                    end
-                end
-            end
-        end
-        % Sanity check
-        if sum(round(sum(p.'))) ~= 2^sym_size
-            fprintf("Error: Probabilities do not sum to 1\n");
-            return;
-        end
+         end
+   end
+end
+% Sanity check
+if sum(round(sum(p.'))) ~= 2^sym_size
+   fprintf("Error: Probabilities do not sum to 1\n");
+   return;
+end
 \end{verbatim}
 \end{frame}
 
@@ -502,6 +504,27 @@ else
 end
 fprintf(file_out,"initial state: %d\n%s\n----------------------------------------------------------------------------------------------------\n\n",istate,output);
 \end{verbatim}
+\end{frame}
+
+\begin{frame}{What's Next}
+\protect\hypertarget{whats-next}{}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  This tool will hopefully automate all the manual calculations that
+  were performed in T. Tithi's dissertation {[}1{]}.
+\item
+  The next step is to use the PRISM output to generate the FER graphs
+\item
+  Will use T. Tithi's analysis of the (8,8) absorbing set to verify
+  validity
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics{figures/thumbnail_Ngdbf-error-floor.cgi.png}
+\caption{FER Graph from {[}1{]} at 600 iterations}
+\end{figure}
 \end{frame}
 
 \begin{frame}{Sources}

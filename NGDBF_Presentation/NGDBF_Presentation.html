@@ -39,7 +39,7 @@
 </head>
 <body>
   <div class="background titlepage">
-    <img src="figures/OldMainTower.png"/>
+    <img src="figures/OldMainTower.png" style="position: absolute; right: 0; bottom: 15%"/>
   </div>
 <div class="slide titlepage">
   <h1 class="title">Analysis of Noisy Gradient-Descent Bit Flipping (NGDBF) Decoding Algorithm</h1>
@@ -59,6 +59,7 @@ Eric Reiss
 <li>Energy Calculation</li>
 <li>Transisition Probabilities</li>
 <li>Write Files and Process Output</li>
+<li>What’s Next</li>
 <li>Sources</li>
 </ul>
 </div>
@@ -193,30 +194,30 @@ end</code></pre>
 <li>Using the energy calculations, the transistion matrix is generated</li>
 </ul>
 <pre><code>p = ones(2^sym_size,2^sym_size);
-        % Flip probabilities calculated according to Eq 3.13 in T. Tithi
-        % dissertation (pg. 26)
-        for row = 1:2^sym_size
-            px = zeros(1,sym_size);
-            for p_idx = 1:sym_size
-                px(p_idx) = normcdf(theta,E(row,p_idx),sigma);
+% Flip probabilities calculated according to Eq 3.13 in T. Tithi
+% dissertation (pg. 26)
+for row = 1:2^sym_size
+   px = zeros(1,sym_size);
+   for p_idx = 1:sym_size
+         px(p_idx) = normcdf(theta,E(row,p_idx),sigma);
+   end
+   rowbin = dec2bin(row-1,sym_size);
+   for col = 1:2^sym_size
+         colbin = dec2bin(col-1,sym_size);
+         for p_idx = 1:sym_size
+            if rowbin(p_idx) == colbin(p_idx)
+               p(row,col) = p(row,col)*(1-px(p_idx));
+            else
+               p(row,col) = p(row,col)*px(p_idx);
             end
-            rowbin = dec2bin(row-1,sym_size);
-            for col = 1:2^sym_size
-                colbin = dec2bin(col-1,sym_size);
-                for p_idx = 1:sym_size
-                    if rowbin(p_idx) == colbin(p_idx)
-                        p(row,col) = p(row,col)*(1-px(p_idx));
-                    else
-                        p(row,col) = p(row,col)*px(p_idx);
-                    end
-                end
-            end
-        end
-        % Sanity check
-        if sum(round(sum(p.&#39;))) ~= 2^sym_size
-            fprintf(&quot;Error: Probabilities do not sum to 1\n&quot;);
-            return;
-        end</code></pre>
+         end
+   end
+end
+% Sanity check
+if sum(round(sum(p.&#39;))) ~= 2^sym_size
+   fprintf(&quot;Error: Probabilities do not sum to 1\n&quot;);
+   return;
+end</code></pre>
 </div>
 <div id="write-files-and-process-outputs" class="slide section level1">
 <h1>Write Files and Process Outputs</h1>
@@ -252,6 +253,18 @@ else
       % Do nothing
 end
 fprintf(file_out,&quot;initial state: %d\n%s\n----------------------------------------------------------------------------------------------------\n\n&quot;,istate,output);</code></pre>
+</div>
+<div id="whats-next" class="slide section level1">
+<h1>What’s Next</h1>
+<ul class="incremental">
+<li>This tool will hopefully automate all the manual calculations that were performed in T. Tithi’s dissertation [1].</li>
+<li>The next step is to use the PRISM output to generate the FER graphs</li>
+<li>Will use T. Tithi’s analysis of the (8,8) absorbing set to verify validity</li>
+</ul>
+<div class="figure">
+<img src="figures/thumbnail_Ngdbf-error-floor.cgi.png" alt="" />
+<p class="caption">FER Graph from [1] at 600 iterations</p>
+</div>
 </div>
 <div id="sources" class="slide section level1">
 <h1>Sources</h1>

@@ -15,6 +15,7 @@ fontsize: '10pt'
 * Energy Calculation
 * Transisition Probabilities
 * Write Files and Process Output
+* What's Next
 * Sources
 
 # LDPC Codes and Trapping Sets
@@ -120,30 +121,30 @@ end
 
 ```
 p = ones(2^sym_size,2^sym_size);
-        % Flip probabilities calculated according to Eq 3.13 in T. Tithi
-        % dissertation (pg. 26)
-        for row = 1:2^sym_size
-            px = zeros(1,sym_size);
-            for p_idx = 1:sym_size
-                px(p_idx) = normcdf(theta,E(row,p_idx),sigma);
+% Flip probabilities calculated according to Eq 3.13 in T. Tithi
+% dissertation (pg. 26)
+for row = 1:2^sym_size
+   px = zeros(1,sym_size);
+   for p_idx = 1:sym_size
+         px(p_idx) = normcdf(theta,E(row,p_idx),sigma);
+   end
+   rowbin = dec2bin(row-1,sym_size);
+   for col = 1:2^sym_size
+         colbin = dec2bin(col-1,sym_size);
+         for p_idx = 1:sym_size
+            if rowbin(p_idx) == colbin(p_idx)
+               p(row,col) = p(row,col)*(1-px(p_idx));
+            else
+               p(row,col) = p(row,col)*px(p_idx);
             end
-            rowbin = dec2bin(row-1,sym_size);
-            for col = 1:2^sym_size
-                colbin = dec2bin(col-1,sym_size);
-                for p_idx = 1:sym_size
-                    if rowbin(p_idx) == colbin(p_idx)
-                        p(row,col) = p(row,col)*(1-px(p_idx));
-                    else
-                        p(row,col) = p(row,col)*px(p_idx);
-                    end
-                end
-            end
-        end
-        % Sanity check
-        if sum(round(sum(p.'))) ~= 2^sym_size
-            fprintf("Error: Probabilities do not sum to 1\n");
-            return;
-        end
+         end
+   end
+end
+% Sanity check
+if sum(round(sum(p.'))) ~= 2^sym_size
+   fprintf("Error: Probabilities do not sum to 1\n");
+   return;
+end
 ```
 
 # Write Files and Process Outputs
@@ -180,6 +181,14 @@ else
 end
 fprintf(file_out,"initial state: %d\n%s\n----------------------------------------------------------------------------------------------------\n\n",istate,output);
 ```
+
+# What's Next
+
+* This tool will hopefully automate all the manual calculations that were performed in T. Tithi's dissertation [1].
+* The next step is to use the PRISM output to generate the FER graphs
+* Will use T. Tithi's analysis of the (8,8) absorbing set to verify validity
+
+![FER Graph from [1] at 600 iterations](figures/thumbnail_Ngdbf-error-floor.cgi.png)
 
 # Sources
  * [1] T. Tithi, "Error-Floors of the 802.3an LDPC Code for Noise Assisted Decoding", _All Graduate Theses and Dissertations_, pp. 7465, 2019.
