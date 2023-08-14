@@ -256,6 +256,12 @@ LDPC Code {[}2{]}.}
     Given a threshold \(\theta\) flip bit \(i\) if \(E_i < \theta\)
   \end{itemize}
 \end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics{figures/thumbnail_Ngdbf-error-floor.cgi.png}
+\caption{FER Graph from {[}1{]} at 600 iterations}
+\end{figure}
 \end{frame}
 
 \begin{frame}{Model Construction}
@@ -303,6 +309,9 @@ LDPC Code {[}2{]}.}
 \protect\hypertarget{matlaboctave-tool-overiview}{}
 \begin{itemize}[<+->]
 \tightlist
+\item
+  This tool will hopefully automate all the manual calculations that
+  were performed in T. Tithi's dissertation {[}1{]}
 \item
   Located in the USU\_stochastic\_case\_studies repository in the
   ngdbf\_models folders, contains the following files
@@ -511,20 +520,51 @@ fprintf(file_out,"initial state: %d\n%s\n---------------------------------------
 \begin{itemize}[<+->]
 \tightlist
 \item
-  This tool will hopefully automate all the manual calculations that
-  were performed in T. Tithi's dissertation {[}1{]}.
-\item
-  The next step is to use the PRISM output to generate the FER graphs
-\item
-  Will use T. Tithi's analysis of the (8,8) absorbing set to verify
-  validity
-\end{itemize}
+  Issues and Possible Solutions
 
-\begin{figure}
-\centering
-\includegraphics{figures/thumbnail_Ngdbf-error-floor.cgi.png}
-\caption{FER Graph from {[}1{]} at 600 iterations}
-\end{figure}
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Runtime
+
+    \begin{itemize}[<+->]
+    \tightlist
+    \item
+      Large trapping sets take a long time to run
+    \item
+      Maybe rewrite in C?
+    \item
+      Need to determine if PRISM is slow or just file I/O
+    \end{itemize}
+  \item
+    Sample generation
+
+    \begin{itemize}[<+->]
+    \tightlist
+    \item
+      Also takes a long time for large trapping sets
+    \item
+      Maybe use some kind IS?
+    \end{itemize}
+  \end{itemize}
+\item
+  To do
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Use PRISM output to generate FER graphs
+
+    \begin{itemize}[<+->]
+    \tightlist
+    \item
+      May need to run more simulations for each initial state and take
+      average?
+    \end{itemize}
+  \item
+    Validate tool against Tasnuva's dissertation results
+  \end{itemize}
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Sources}

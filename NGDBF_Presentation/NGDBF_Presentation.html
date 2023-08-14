@@ -94,6 +94,10 @@ Eric Reiss
 <li>Given a threshold <span class="math inline">\theta</span> flip bit <span class="math inline">i</span> if <span class="math inline">E_i &lt; \theta</span></li>
 </ul></li>
 </ul>
+<div class="figure">
+<img src="figures/thumbnail_Ngdbf-error-floor.cgi.png" alt="" />
+<p class="caption">FER Graph from [1] at 600 iterations</p>
+</div>
 </div>
 <div id="model-construction" class="slide section level1">
 <h1>Model Construction</h1>
@@ -117,6 +121,7 @@ Eric Reiss
 <div id="matlaboctave-tool-overiview" class="slide section level1">
 <h1>MATLAB/Octave Tool Overiview</h1>
 <ul class="incremental">
+<li>This tool will hopefully automate all the manual calculations that were performed in T. Tithi’s dissertation [1]</li>
 <li>Located in the USU_stochastic_case_studies repository in the ngdbf_models folders, contains the following files
 <ul class="incremental">
 <li>run_ngdbf.m: Driver function that contains most of the relevant code</li>
@@ -257,14 +262,29 @@ fprintf(file_out,&quot;initial state: %d\n%s\n----------------------------------
 <div id="whats-next" class="slide section level1">
 <h1>What’s Next</h1>
 <ul class="incremental">
-<li>This tool will hopefully automate all the manual calculations that were performed in T. Tithi’s dissertation [1].</li>
-<li>The next step is to use the PRISM output to generate the FER graphs</li>
-<li>Will use T. Tithi’s analysis of the (8,8) absorbing set to verify validity</li>
+<li>Issues and Possible Solutions
+<ul class="incremental">
+<li>Runtime
+<ul class="incremental">
+<li>Large trapping sets take a long time to run</li>
+<li>Maybe rewrite in C?</li>
+<li>Need to determine if PRISM is slow or just file I/O</li>
+</ul></li>
+<li>Sample generation
+<ul class="incremental">
+<li>Also takes a long time for large trapping sets</li>
+<li>Maybe use some kind IS?</li>
+</ul></li>
+</ul></li>
+<li>To do
+<ul class="incremental">
+<li>Use PRISM output to generate FER graphs
+<ul class="incremental">
+<li>May need to run more simulations for each initial state and take average?</li>
+</ul></li>
+<li>Validate tool against Tasnuva’s dissertation results</li>
+</ul></li>
 </ul>
-<div class="figure">
-<img src="figures/thumbnail_Ngdbf-error-floor.cgi.png" alt="" />
-<p class="caption">FER Graph from [1] at 600 iterations</p>
-</div>
 </div>
 <div id="sources" class="slide section level1">
 <h1>Sources</h1>

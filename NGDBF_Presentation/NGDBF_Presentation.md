@@ -25,7 +25,8 @@ fontsize: '10pt'
 * Trapping sets are a sub-set of the graph that limit the performance of decoding algorithms, creating an error-floor
 * Absorbing sets are a special case of a trapping sets that are stable in a bit flipping decoder [1]
 
-![(8,8) Absorbing set that is dominant in the 802.3an 10GBASE-T LDPC Code [2].](figures/8_8_absorbing.png){width=20%}
+![(8,8) Absorbing set that is dominant in the 802.3an 10GBASE-T LDPC Code [2].](figures/8_8_absorbing.png){width=20%} 
+
 
 # Algorithm Overview
 
@@ -40,6 +41,8 @@ fontsize: '10pt'
    - Calculate the energy for bit i, $E_i = y_ix_i+w\sum_{j\in N_i}s_j + z_i$, where w is i.i.d white noise and $z_i$ is a zero mean noise pertubation
    - Given a threshold $\theta$ flip bit $i$ if $E_i < \theta$
 
+ ![FER Graph from [1] at 600 iterations](figures/thumbnail_Ngdbf-error-floor.cgi.png)
+
 # Model Construction
 * The Markov Chain structure used in the tool was proposed in [1]
 * For a given (a,b) trapping set, the state space is described by the a-bit binary representation of the numbers from 0 to $2^a-1$ 
@@ -51,6 +54,7 @@ fontsize: '10pt'
    - For example, state 010 to 100, where a state is $b_2b_1b_0$, is calculated by $P_{010\rightarrow 100}=P_{b_2flip}*P_{b_1flip}*(1-P_{b_0flip})$
 
 # MATLAB/Octave Tool Overiview
+* This tool will hopefully automate all the manual calculations that were performed in T. Tithi's dissertation [1]
 * Located in the USU_stochastic_case_studies repository in the ngdbf_models folders, contains the following files
    - run_ngdbf.m: Driver function that contains most of the relevant code
    - load_trapping_sets.m: Script containing some of the trapping sets in University of Arizona's Trapping Set Ontology [5].
@@ -183,12 +187,20 @@ fprintf(file_out,"initial state: %d\n%s\n---------------------------------------
 ```
 
 # What's Next
+* Issues and Possible Solutions
+   - Runtime
+      - Large trapping sets take a long time to run
+      - Maybe rewrite in C?
+      - Need to determine if PRISM is slow or just file I/O
+   - Sample generation
+      - Also takes a long time for large trapping sets
+      - Maybe use some kind IS?
+* To do
+   - Use PRISM output to generate FER graphs
+      - May need to run more simulations for each initial state and take average?
+   - Validate tool against Tasnuva's dissertation results
 
-* This tool will hopefully automate all the manual calculations that were performed in T. Tithi's dissertation [1].
-* The next step is to use the PRISM output to generate the FER graphs
-* Will use T. Tithi's analysis of the (8,8) absorbing set to verify validity
 
-![FER Graph from [1] at 600 iterations](figures/thumbnail_Ngdbf-error-floor.cgi.png)
 
 # Sources
  * [1] T. Tithi, "Error-Floors of the 802.3an LDPC Code for Noise Assisted Decoding", _All Graduate Theses and Dissertations_, pp. 7465, 2019.
