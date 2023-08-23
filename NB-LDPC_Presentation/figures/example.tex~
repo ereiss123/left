@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+  \begin{axis}[
+      width=8cm,
+      height=4cm,
+      xlabel={Time (s)},
+      ylabel={Voltage (mV)},
+      xmin=0,
+      xmax=10
+      ]
+    \addplot {5*sin(x)};
+  \end{axis}
+\end{tikzpicture}

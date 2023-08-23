@@ -1,0 +1,9 @@
+\usetheme{Warsaw}
+\pgfdeclareimage[width=\paperwidth]{mybackground}{figures/IMG_0404.jpg}
+\setbeamertemplate{titlepage}{\begin{picture}(0,0)\put(-30,-163){\pgfuseimage{mybackground}}\put(0,-110.7){%
+      \begin{minipage}[b][45mm][t]{226mm}
+        \usebeamerfont{title}{\inserttitle\par}
+      \end{minipage}
+    }
+  \end{picture}
+}

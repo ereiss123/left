@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+  
+  \node[draw=black,fill=pink] at (0,0) (thing1) {Thing 1};
+  \node[draw=black,fill=pink] at (0,-2) (thing2) {Thing 2};
+  \node[draw=black,fill=pink] at (0,-4) (thing3) {Thing 3};
+
+  \foreach \x/\y in {1/2, 2/3} \draw[->] \x -- \y;
+
+\end{tikzpicture}

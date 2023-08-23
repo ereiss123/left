@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Eric Reiss" />
+  <title>Non-Binary LDPC Code Construction and Decoding</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+    href="https://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" />
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="slides.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+   var mathElements = document.getElementsByClassName("math");
+   var macros = [];
+   for (var i = 0; i < mathElements.length; i++) {
+    var texText = mathElements[i].firstChild;
+    if (mathElements[i].tagName == "SPAN") {
+     katex.render(texText.data, mathElements[i], {
+      displayMode: mathElements[i].classList.contains('display'),
+      throwOnError: false,
+      macros: macros,
+      fleqn: false
+     });
+  }}});
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <script src="https://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js"
+    charset="utf-8" type="text/javascript"></script>
+</head>
+<body>
+  <div class="background titlepage">
+    <img src="figures/OldMainTower.png" style="position: absolute; right: 0; bottom: 15%"/>
+  </div>
+<div class="slide titlepage">
+  <h1 class="title">Non-Binary LDPC Code Construction and Decoding</h1>
+  <p class="subtitle">Based on Low-Density Parity Checks over GF(q) [1]</p>
+  <p class="author">
+Eric Reiss
+  </p>
+</div>
+<div id="overview" class="slide section level1">
+<h1>Overview</h1>
+</div>
+<div id="term-definition" class="slide section level1">
+<h1>Term Definition</h1>
+<ul class="incremental">
+<li>weight - number of non-zero elements in a vector or matrix</li>
+<li>density - expected fraction of non-zero symbols in a source of random symbols</li>
+<li>overlap - number of cooridinates in which two vectors have non-zero entries</li>
+<li><span class="math inline">H</span> - sparse random parity check matrix</li>
+</ul>
+</div>
+<div id="sources" class="slide section level1">
+<h1>Sources</h1>
+<ul class="incremental">
+<li>[1] M. C. Davey and D. MacKay, “Low-density parity check codes over GF(q),” in IEEE Communications Letters, vol. 2, no. 6, pp. 165-167, June 1998, doi: 10.1109/4234.681360.</li>
+</ul>
+</div>
+</body>
+</html>
