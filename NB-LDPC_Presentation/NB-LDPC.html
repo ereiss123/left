@@ -96,7 +96,7 @@ Eric Reiss
 </ul></li>
 <li>The likelihood that <span class="math inline">x_n=a</span>, <span class="math inline">a\in GF(2^b)</span> is defined <span class="math inline">f^a_n:=\prod_{i=1}^b g^{a_i}_{n_i}</span> where <span class="math inline">a_i</span> is the ith bit of the binary representation of <span class="math inline">a</span>
 <ul class="incremental">
-<li>Ex. Likelihood <span class="math inline">x_1=1</span> in <span class="math inline">GF(4)</span>: <span class="math inline">f^1_1 = \prod_{i=1}^2 g^{a_i}_{1_i} = g^{0}_{1} * g^1_1 = (1-\frac{1}{e^{2s|y_n|/\sigma^2}}) * \frac{1}{e^{2s|y_n|/\sigma^2}}</span></li>
+<li>Ex. Likelihood <span class="math inline">x_1=1</span> in <span class="math inline">GF(4)</span>: <span class="math inline">f^1_1 = \prod_{i=1}^2 g^{a_i}_{1_i} = g^{0}_{1_1} * g^1_{1_2} = (1-\frac{1}{e^{2s|y_{1_1}|/\sigma^2}}) * \frac{1}{e^{2s|y_{1_2}|/\sigma^2}}</span></li>
 </ul></li>
 </ul>
 </div>
@@ -117,7 +117,32 @@ Eric Reiss
 <h1>Algorithm</h1>
 <ul class="incremental">
 <li>Initialize <span class="math inline">q_{mn}^a</span> to <span class="math inline">f^a_n</span></li>
-<li>Update <span class="math inline">r_{mn}^a</span> as <span class="math inline">r_{mn}^a = \sum\limits_{\textbf{X&#39;}:x&#39;_n=a}\text{Prob}[z_m|x_n]\prod\limits_{j\in\mathcal{N}(m)/n}q^{x&#39;}_{mj}</span></li>
+<li>Update <span class="math inline">r_{mn}^a</span> as <span class="math inline">r_{mn}^a = \sum\limits_{\textbf{X&#39;}:x&#39;_n=a}\text{Prob}[z_m|x_n]\prod\limits_{j\in\mathcal{N}(m)/n}q^{x&#39;}_{mj}</span>
+<ul class="incremental">
+<li>Davey and Mackay introduce some simplifications</li>
+<li>Define <span class="math inline">\sigma_{mk} := \sum_{j:j\le k} H_{mj}x&#39;_j</span></li>
+<li>Define <span class="math inline">\rho_{mk} := \sum_{j:j\ge k} H_{mj}x&#39;_j</span></li>
+<li>Calculate Prob<span class="math inline">[\sigma_{mk}=a]</span> for each <span class="math inline">a\in GF(2^b)</span> and each <span class="math inline">k\in \mathcal{N}(m)</span></li>
+<li>Prob<span class="math inline">[\sigma_{mk}=a]</span> = <span class="math inline">\sum\limits_{s,t:H_{mj}t+s=a}\text{ Prob}[\sigma_{mi}=s]q^t_{mj}</span> if <span class="math inline">i,j</span> are successive and <span class="math inline">j&gt;i</span></li>
+<li><span class="math inline">\rho_{mk}</span> is calculated in a similiar way</li>
+<li>Then <span class="math inline">r^a_{mn} = \text{ Prob}[(\sigma_{m(n-1)}+\rho_{m(n-1)})=z_m-H_{mn}a]</span></li>
+<li>Expanded as <span class="math inline">r^a_{mn} = \sum\limits_{s,t:s+t=z_m-H_{mn}a}\text{ Prob}[\sigma_{m(n-1)=s}] * \text{Prob}[\rho_{m(n+1)}=t]</span></li>
+</ul></li>
+</ul>
+</div>
+<div id="algorithm-cont." class="slide section level1">
+<h1>Algorithm Cont.</h1>
+<ul class="incremental">
+<li>Update <span class="math inline">q^a_{mn}</span>
+<ul class="incremental">
+<li>Define <span class="math inline">\alpha_{mn}</span> as a weight</li>
+<li><span class="math inline">q^a_{mn} = \alpha_{mn} f^a_n\prod\limits_{j\in\mathcal{M}(n)\\m}r^a_{jn}</span></li>
+<li>Select <span class="math inline">\alpha_{mn}</span> s.t. <span class="math inline">\sum_{a=1}^q q^a_{mn} = 1</span></li>
+</ul></li>
+<li>Make tentative decoding <span class="math inline">\hat{x_n} = \text{argmax}(a)f^a_n\prod\limits_{j\in\mathcal{M}(n)}r^a_{jn}</span>
+<ul class="incremental">
+<li>If <span class="math inline">H\hat{x} = z</span> then the algorithm is complete</li>
+</ul></li>
 </ul>
 </div>
 <div id="sources" class="slide section level1">

@@ -258,7 +258,7 @@ and D. Mackay}
   \tightlist
   \item
     Ex. Likelihood \(x_1=1\) in \(GF(4)\):
-    \(f^1_1 = \prod_{i=1}^2 g^{a_i}_{1_i} = g^{0}_{1} * g^1_1 = (1-\frac{1}{e^{2s|y_n|/\sigma^2}}) * \frac{1}{e^{2s|y_n|/\sigma^2}}\)
+    \(f^1_1 = \prod_{i=1}^2 g^{a_i}_{1_i} = g^{0}_{1_1} * g^1_{1_2} = (1-\frac{1}{e^{2s|y_{1_1}|/\sigma^2}}) * \frac{1}{e^{2s|y_{1_2}|/\sigma^2}}\)
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -299,6 +299,59 @@ and D. Mackay}
 \item
   Update \(r_{mn}^a\) as
   \(r_{mn}^a = \sum\limits_{\textbf{X'}:x'_n=a}\text{Prob}[z_m|x_n]\prod\limits_{j\in\mathcal{N}(m)/n}q^{x'}_{mj}\)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Davey and Mackay introduce some simplifications
+  \item
+    Define \(\sigma_{mk} := \sum_{j:j\le k} H_{mj}x'_j\)
+  \item
+    Define \(\rho_{mk} := \sum_{j:j\ge k} H_{mj}x'_j\)
+  \item
+    Calculate Prob\([\sigma_{mk}=a]\) for each \(a\in GF(2^b)\) and each
+    \(k\in \mathcal{N}(m)\)
+  \item
+    Prob\([\sigma_{mk}=a]\) =
+    \(\sum\limits_{s,t:H_{mj}t+s=a}\text{ Prob}[\sigma_{mi}=s]q^t_{mj}\)
+    if \(i,j\) are successive and \(j>i\)
+  \item
+    \(\rho_{mk}\) is calculated in a similiar way
+  \item
+    Then
+    \(r^a_{mn} = \text{ Prob}[(\sigma_{m(n-1)}+\rho_{m(n-1)})=z_m-H_{mn}a]\)
+  \item
+    Expanded as
+    \(r^a_{mn} = \sum\limits_{s,t:s+t=z_m-H_{mn}a}\text{ Prob}[\sigma_{m(n-1)=s}] * \text{Prob}[\rho_{m(n+1)}=t]\)
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Algorithm Cont.}
+\protect\hypertarget{algorithm-cont.}{}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Update \(q^a_{mn}\)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Define \(\alpha_{mn}\) as a weight
+  \item
+    \(q^a_{mn} = \alpha_{mn} f^a_n\prod\limits_{j\in\mathcal{M}(n)\\m}r^a_{jn}\)
+  \item
+    Select \(\alpha_{mn}\) s.t. \(\sum_{a=1}^q q^a_{mn} = 1\)
+  \end{itemize}
+\item
+  Make tentative decoding
+  \(\hat{x_n} = \text{argmax}(a)f^a_n\prod\limits_{j\in\mathcal{M}(n)}r^a_{jn}\)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    If \(H\hat{x} = z\) then the algorithm is complete
+  \end{itemize}
 \end{itemize}
 \end{frame}
 

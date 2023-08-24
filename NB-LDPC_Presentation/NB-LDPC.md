@@ -36,7 +36,8 @@ fontsize: '10pt'
 * The likelihood that the nth noise bit is 1 is given by $g_n^1=\frac{1}{1+e^{2s|y_n|/\sigma^2}}$ where $y_n$ is the channel output
     - The likelihood the bit is 0 is $1-g_n^1$
 * The likelihood that $x_n=a$, $a\in GF(2^b)$ is defined $f^a_n:=\prod_{i=1}^b g^{a_i}_{n_i}$ where $a_i$ is the ith bit of the binary representation of $a$
-    - Ex. Likelihood $x_1=1$ in $GF(4)$: $f^1_1 = \prod_{i=1}^2 g^{a_i}_{1_i} = g^{0}_{1} * g^1_1 =  (1-\frac{1}{e^{2s|y_n|/\sigma^2}}) * \frac{1}{e^{2s|y_n|/\sigma^2}}$
+    - Ex. Likelihood $x_1=1$ in $GF(4)$: 
+     $f^1_1 = \prod_{i=1}^2 g^{a_i}_{1_i} = g^{0}_{1_1} * g^1_{1_2} =  (1-\frac{1}{e^{2s|y_{1_1}|/\sigma^2}}) * \frac{1}{e^{2s|y_{1_2}|/\sigma^2}}$
 
 # Decoding Algorithm
 * Objective: find most probable vector $x$ s.t. $Hx=z$
@@ -49,6 +50,24 @@ fontsize: '10pt'
 # Algorithm
 * Initialize $q_{mn}^a$ to $f^a_n$
 * Update $r_{mn}^a$ as  $r_{mn}^a = \sum\limits_{\textbf{X'}:x'_n=a}\text{Prob}[z_m|x_n]\prod\limits_{j\in\mathcal{N}(m)/n}q^{x'}_{mj}$
+    - Davey and Mackay introduce some simplifications
+    - Define $\sigma_{mk} := \sum_{j:j\le k} H_{mj}x'_j$
+    - Define $\rho_{mk} := \sum_{j:j\ge k} H_{mj}x'_j$
+    - Calculate Prob$[\sigma_{mk}=a]$ for each $a\in GF(2^b)$ and each $k\in \mathcal{N}(m)$ 
+    - Prob$[\sigma_{mk}=a]$ = $\sum\limits_{s,t:H_{mj}t+s=a}\text{ Prob}[\sigma_{mi}=s]q^t_{mj}$ if $i,j$ are successive and $j>i$
+    - $\rho_{mk}$ is calculated in a similiar way
+    - Then $r^a_{mn} = \text{ Prob}[(\sigma_{m(n-1)}+\rho_{m(n-1)})=z_m-H_{mn}a]$ 
+    - Expanded as $r^a_{mn} = \sum\limits_{s,t:s+t=z_m-H_{mn}a}\text{ Prob}[\sigma_{m(n-1)=s}] * \text{Prob}[\rho_{m(n+1)}=t]$
+
+# Algorithm Cont.
+* Update $q^a_{mn}$
+    - Define $\alpha_{mn}$ as a weight
+    - $q^a_{mn} = \alpha_{mn} f^a_n\prod\limits_{j\in\mathcal{M}(n)\\m}r^a_{jn}$
+    - Select $\alpha_{mn}$ s.t. $\sum_{a=1}^q q^a_{mn} = 1$
+* Make tentative decoding $\hat{x_n} = \text{argmax}(a)f^a_n\prod\limits_{j\in\mathcal{M}(n)}r^a_{jn}$
+    - If $H\hat{x} = z$ then the algorithm is complete
+
+
 
 # Sources
  * [1] M. C. Davey and D. MacKay, "Low-density parity check codes over GF(q)," in IEEE Communications Letters, vol. 2, no. 6, pp. 165-167, June 1998, doi: 10.1109/4234.681360.
