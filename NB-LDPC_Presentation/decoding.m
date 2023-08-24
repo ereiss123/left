@@ -23,9 +23,9 @@ sigma = 1;
 R = K/N;
 SNR = s^2/(2*R*sigma^2);
 % Channel output
-y = normrnd(1, sigma, [M N]);
+y = normrnd(1, sigma, [1 N]);
 x = sign(y)
-
+x = mod(x+1,2); % convert to binary
 
 % Decode
 q0 = zeros(M,N);

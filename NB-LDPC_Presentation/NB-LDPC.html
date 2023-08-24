@@ -62,6 +62,8 @@ Eric Reiss
 <li><span class="math inline">K</span> - source block length</li>
 <li><span class="math inline">M</span> - number of parity checks, <span class="math inline">M=N-K</span></li>
 <li><span class="math inline">t</span> - mean column weight</li>
+<li>symbol - element of <span class="math inline">GF(2^b)</span></li>
+<li>bit - binary representation of a symbol</li>
 </ul>
 </div>
 <div id="code-construction" class="slide section level1">
@@ -89,7 +91,8 @@ Eric Reiss
 <ul class="incremental">
 <li>Used a memoryless, binary symmetric and binary gaussian channel with inputs <span class="math inline">\pm s</span> and variance <span class="math inline">\sigma^2=1</span></li>
 <li>For a code-rate <span class="math inline">R</span>, <span class="math inline">SNR=\frac{s^2}{2R\sigma^2}</span> and if <span class="math inline">\sigma^2=1</span> then <span class="math inline">SNR=\frac{s^2}{2R}</span></li>
-<li>For <span class="math inline">GF(2^b)</span>, channel output <span class="math inline">x_n</span> has <span class="math inline">b</span> bits, <span class="math inline">x_{n_1},x_{n_2},\dots,x_{n_b}</span></li>
+<li>For <span class="math inline">GF(2^b)</span>, <span class="math inline">\textbf{x}</span> is a sample from the assumed noise model consisting of noise symbols <span class="math inline">x_n</span>, which in turn consist of <span class="math inline">b</span> bits</li>
+<li>The received bit is assigned to be the sign of the output</li>
 <li>The likelihood that the nth noise bit is 1 is given by <span class="math inline">g_n^1=\frac{1}{1+e^{2s|y_n|/\sigma^2}}</span> where <span class="math inline">y_n</span> is the channel output
 <ul class="incremental">
 <li>The likelihood the bit is 0 is <span class="math inline">1-g_n^1</span></li>
@@ -103,13 +106,15 @@ Eric Reiss
 <div id="decoding-algorithm" class="slide section level1">
 <h1>Decoding Algorithm</h1>
 <ul class="incremental">
-<li>Objective: find most probable vector <span class="math inline">x</span> s.t. <span class="math inline">Hx=z</span></li>
-<li>Define <span class="math inline">\mathcal{N}(m) = \{n:H_{nm}\neq 0\}</span> as the set of symbols nodes, <span class="math inline">n</span>, adjacent to check node <span class="math inline">m</span></li>
-<li>Define <span class="math inline">\mathcal{M}(n) = \{m:H_{nm}\neq 0\}</span> as the set of check nodes, <span class="math inline">m</span>, adjacent to symbol node <span class="math inline">n</span></li>
+<li>Objective: find most probable vector <span class="math inline">\textbf{x}</span> s.t. <span class="math inline">\textbf{Hx}=z</span></li>
+<li>Elements of <span class="math inline">\textbf{x}</span> are referred to as noise symbols</li>
+<li>Elements of <span class="math inline">\textbf{z}</span> are referred to as checks</li>
+<li>Define <span class="math inline">\mathcal{N}(m) = \{n:H_{mn}\neq 0\}</span> as the set of symbols nodes, <span class="math inline">n</span>, adjacent to check node <span class="math inline">m</span></li>
+<li>Define <span class="math inline">\mathcal{M}(n) = \{m:H_{mn}\neq 0\}</span> as the set of check nodes, <span class="math inline">m</span>, adjacent to symbol node <span class="math inline">n</span></li>
 <li>For each non-zero entry in <span class="math inline">H</span>, define <span class="math inline">q_{mn}^a</span> and <span class="math inline">r_{mn}^a</span> for <span class="math inline">a\in GF(2^b)</span>
 <ul class="incremental">
-<li><span class="math inline">q_{mn}^a</span> is the probability that symbol <span class="math inline">x_n</span> is <span class="math inline">a</span></li>
-<li><span class="math inline">r_{mn}^a</span> is the probability that check <span class="math inline">m</span> is satisfied if <span class="math inline">x_n=a</span></li>
+<li><span class="math inline">q_{mn}^a</span> is the probability that symbol <span class="math inline">n</span> of <span class="math inline">\textbf{x}</span> is <span class="math inline">a</span></li>
+<li><span class="math inline">r_{mn}^a</span> is the probability that check <span class="math inline">m</span> is satisfied if symbol <span class="math inline">n</span> of <span class="math inline">\textbf{x}</span> is fixed at <span class="math inline">a</span></li>
 </ul></li>
 </ul>
 </div>
@@ -117,8 +122,9 @@ Eric Reiss
 <h1>Algorithm</h1>
 <ul class="incremental">
 <li>Initialize <span class="math inline">q_{mn}^a</span> to <span class="math inline">f^a_n</span></li>
-<li>Update <span class="math inline">r_{mn}^a</span> as <span class="math inline">r_{mn}^a = \sum\limits_{\textbf{X&#39;}:x&#39;_n=a}\text{Prob}[z_m|x_n]\prod\limits_{j\in\mathcal{N}(m)/n}q^{x&#39;}_{mj}</span>
+<li>Update <span class="math inline">r_{mn}^a</span> as <span class="math inline">r_{mn}^a = \sum\limits_{\textbf{x&#39;}:x&#39;_n=a}\text{Prob}[z_m|\textbf{x&#39;}]\prod\limits_{j\in\mathcal{N}(m)/n}q^{x&#39;_j}_{mj}</span>
 <ul class="incremental">
+<li><span class="math inline">\text{Prob}[z_m|\textbf{x&#39;}]\in [0,1]</span> depending on if <span class="math inline">\textbf{x&#39;}</span> satisfies check <span class="math inline">m</span></li>
 <li>Davey and Mackay introduce some simplifications</li>
 <li>Define <span class="math inline">\sigma_{mk} := \sum_{j:j\le k} H_{mj}x&#39;_j</span></li>
 <li>Define <span class="math inline">\rho_{mk} := \sum_{j:j\ge k} H_{mj}x&#39;_j</span></li>
@@ -142,6 +148,7 @@ Eric Reiss
 <li>Make tentative decoding <span class="math inline">\hat{x_n} = \text{argmax}(a)f^a_n\prod\limits_{j\in\mathcal{M}(n)}r^a_{jn}</span>
 <ul class="incremental">
 <li>If <span class="math inline">H\hat{x} = z</span> then the algorithm is complete</li>
+<li>Else it repeats until a valid decoding is obtained or maximum number of iterations is met</li>
 </ul></li>
 </ul>
 </div>
