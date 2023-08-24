@@ -2,7 +2,7 @@ NAME = NB-LDPC
 INSTALL_PATH_PDF = ~/public_html/slides/NB-LDPC/pdf_slides
 INSTALL_PATH_HTML = ~/public_html/slides/NB-LDPC
 
-all: $(NAME).pdf $(NAME).html $(NAME).tex
+all: $(NAME).html $(NAME).tex
 
 MAKE=/usr/bin/make
 PANDOC=/usr/local/bin/pandoc

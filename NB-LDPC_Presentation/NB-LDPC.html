@@ -43,7 +43,7 @@
   </div>
 <div class="slide titlepage">
   <h1 class="title">Non-Binary LDPC Code Construction and Decoding</h1>
-  <p class="subtitle">Based on Low-Density Parity Checks over GF(q) [1]</p>
+  <p class="subtitle">Based on “Low-Density Parity Checks over GF(q)” by M. Davey and D. Mackay</p>
   <p class="author">
 Eric Reiss
   </p>
@@ -58,6 +58,66 @@ Eric Reiss
 <li>density - expected fraction of non-zero symbols in a source of random symbols</li>
 <li>overlap - number of cooridinates in which two vectors have non-zero entries</li>
 <li><span class="math inline">H</span> - sparse random parity check matrix</li>
+<li><span class="math inline">N</span> - transmitted block length</li>
+<li><span class="math inline">K</span> - source block length</li>
+<li><span class="math inline">M</span> - number of parity checks, <span class="math inline">M=N-K</span></li>
+<li><span class="math inline">t</span> - mean column weight</li>
+</ul>
+</div>
+<div id="code-construction" class="slide section level1">
+<h1>Code Construction</h1>
+<ul class="incremental">
+<li>Let <span class="math inline">H</span> be an <span class="math inline">M\times N</span> random parity check matrix
+<ul class="incremental">
+<li>The weight per column will be greater than 2 with a mean of <span class="math inline">t</span></li>
+<li>The weight per row will be uniform as possible</li>
+</ul></li>
+<li>Non-zero elements are selected from a <strong>special distribution</strong> to maximize entropy of syndrome
+<ul class="incremental">
+<li>Each codeword should have roughly the same likelihood</li>
+<li>Citation by <strong>special distribution</strong> is for a work in progress paper that I don’t believe was published, at least not under that name</li>
+</ul></li>
+<li>Generator matrix is obtained through gaussian elimination on <span class="math inline">H</span></li>
+<li>If rows of <span class="math inline">H</span> are not independent, then <span class="math inline">H</span> defines a parity check for the same <span class="math inline">N</span> but a smaller <span class="math inline">M</span>
+<ul class="incremental">
+<li><span class="math inline">H</span> defines a code of at least <span class="math inline">K/N</span></li>
+</ul></li>
+</ul>
+</div>
+<div id="channel-model" class="slide section level1">
+<h1>Channel Model</h1>
+<ul class="incremental">
+<li>Used a memoryless, binary symmetric and binary gaussian channel with inputs <span class="math inline">\pm s</span> and variance <span class="math inline">\sigma^2=1</span></li>
+<li>For a code-rate <span class="math inline">R</span>, <span class="math inline">SNR=\frac{s^2}{2R\sigma^2}</span> and if <span class="math inline">\sigma^2=1</span> then <span class="math inline">SNR=\frac{s^2}{2R}</span></li>
+<li>For <span class="math inline">GF(2^b)</span>, channel output <span class="math inline">x_n</span> has <span class="math inline">b</span> bits, <span class="math inline">x_{n_1},x_{n_2},\dots,x_{n_b}</span></li>
+<li>The likelihood that the nth noise bit is 1 is given by <span class="math inline">g_n^1=\frac{1}{1+e^{2s|y_n|/\sigma^2}}</span> where <span class="math inline">y_n</span> is the channel output
+<ul class="incremental">
+<li>The likelihood the bit is 0 is <span class="math inline">1-g_n^1</span></li>
+</ul></li>
+<li>The likelihood that <span class="math inline">x_n=a</span>, <span class="math inline">a\in GF(2^b)</span> is defined <span class="math inline">f^a_n:=\prod_{i=1}^b g^{a_i}_{n_i}</span> where <span class="math inline">a_i</span> is the ith bit of the binary representation of <span class="math inline">a</span>
+<ul class="incremental">
+<li>Ex. Likelihood <span class="math inline">x_1=1</span> in <span class="math inline">GF(4)</span>: <span class="math inline">f^1_1 = \prod_{i=1}^2 g^{a_i}_{1_i} = g^{0}_{1} * g^1_1 = (1-\frac{1}{e^{2s|y_n|/\sigma^2}}) * \frac{1}{e^{2s|y_n|/\sigma^2}}</span></li>
+</ul></li>
+</ul>
+</div>
+<div id="decoding-algorithm" class="slide section level1">
+<h1>Decoding Algorithm</h1>
+<ul class="incremental">
+<li>Objective: find most probable vector <span class="math inline">x</span> s.t. <span class="math inline">Hx=z</span></li>
+<li>Define <span class="math inline">\mathcal{N}(m) = \{n:H_{nm}\neq 0\}</span> as the set of symbols nodes, <span class="math inline">n</span>, adjacent to check node <span class="math inline">m</span></li>
+<li>Define <span class="math inline">\mathcal{M}(n) = \{m:H_{nm}\neq 0\}</span> as the set of check nodes, <span class="math inline">m</span>, adjacent to symbol node <span class="math inline">n</span></li>
+<li>For each non-zero entry in <span class="math inline">H</span>, define <span class="math inline">q_{mn}^a</span> and <span class="math inline">r_{mn}^a</span> for <span class="math inline">a\in GF(2^b)</span>
+<ul class="incremental">
+<li><span class="math inline">q_{mn}^a</span> is the probability that symbol <span class="math inline">x_n</span> is <span class="math inline">a</span></li>
+<li><span class="math inline">r_{mn}^a</span> is the probability that check <span class="math inline">m</span> is satisfied if <span class="math inline">x_n=a</span></li>
+</ul></li>
+</ul>
+</div>
+<div id="algorithm" class="slide section level1">
+<h1>Algorithm</h1>
+<ul class="incremental">
+<li>Initialize <span class="math inline">q_{mn}^a</span> to <span class="math inline">f^a_n</span></li>
+<li>Update <span class="math inline">r_{mn}^a</span> as <span class="math inline">r_{mn}^a = \sum\limits_{\textbf{X&#39;}:x&#39;_n=a}\text{Prob}[z_m|x_n]\prod\limits_{j\in\mathcal{N}(m)/n}q^{x&#39;}_{mj}</span></li>
 </ul>
 </div>
 <div id="sources" class="slide section level1">

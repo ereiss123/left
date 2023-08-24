@@ -1,7 +1,7 @@
 
 ---
 title: 'Non-Binary LDPC Code Construction and Decoding'
-subtitle: 'Based on Low-Density Parity Checks over GF(q) [1]'
+subtitle: 'Based on "Low-Density Parity Checks over GF(q)" by M. Davey and D. Mackay '
 author: 'Eric Reiss'
 title-bg: 'figures/OldMainTower.png'
 fontsize: '10pt'
@@ -18,7 +18,37 @@ fontsize: '10pt'
 * $M$ - number of parity checks, $M=N-K$
 * $t$ - mean column weight
 
+# Code Construction
+* Let $H$ be an $M\times N$ random parity check matrix
+    - The weight per column will be greater than 2 with a mean of $t$
+    - The weight per row will be uniform as possible
+* Non-zero elements are selected from a **special distribution** to maximize entropy of syndrome
+    - Each codeword should have roughly the same likelihood
+    - Citation by **special distribution** is for a work in progress paper that I don't believe was published, at least not under that name
+* Generator matrix is obtained through gaussian elimination on $H$
+* If rows of $H$ are not independent, then $H$ defines a parity check for the same $N$ but a smaller $M$
+    - $H$ defines a code of at least $K/N$
 
+# Channel Model
+* Used a memoryless, binary symmetric and binary gaussian channel with inputs $\pm s$ and variance $\sigma^2=1$
+* For a code-rate $R$, $SNR=\frac{s^2}{2R\sigma^2}$ and if $\sigma^2=1$ then $SNR=\frac{s^2}{2R}$
+* For $GF(2^b)$, channel output $x_n$ has $b$ bits, $x_{n_1},x_{n_2},\dots,x_{n_b}$
+* The likelihood that the nth noise bit is 1 is given by $g_n^1=\frac{1}{1+e^{2s|y_n|/\sigma^2}}$ where $y_n$ is the channel output
+    - The likelihood the bit is 0 is $1-g_n^1$
+* The likelihood that $x_n=a$, $a\in GF(2^b)$ is defined $f^a_n:=\prod_{i=1}^b g^{a_i}_{n_i}$ where $a_i$ is the ith bit of the binary representation of $a$
+    - Ex. Likelihood $x_1=1$ in $GF(4)$: $f^1_1 = \prod_{i=1}^2 g^{a_i}_{1_i} = g^{0}_{1} * g^1_1 =  (1-\frac{1}{e^{2s|y_n|/\sigma^2}}) * \frac{1}{e^{2s|y_n|/\sigma^2}}$
+
+# Decoding Algorithm
+* Objective: find most probable vector $x$ s.t. $Hx=z$
+* Define $\mathcal{N}(m) = \{n:H_{nm}\neq 0\}$ as the set of symbols nodes, $n$, adjacent to check node $m$
+* Define $\mathcal{M}(n) = \{m:H_{nm}\neq 0\}$ as the set of check nodes, $m$, adjacent to symbol node $n$ 
+* For each non-zero entry in $H$, define $q_{mn}^a$ and $r_{mn}^a$ for $a\in GF(2^b)$
+    - $q_{mn}^a$ is the probability that symbol $x_n$ is $a$
+    - $r_{mn}^a$ is the probability that check $m$ is satisfied if $x_n=a$
+
+# Algorithm
+* Initialize $q_{mn}^a$ to $f^a_n$
+* Update $r_{mn}^a$ as  $r_{mn}^a = \sum\limits_{\textbf{X'}:x'_n=a}\text{Prob}[z_m|x_n]\prod\limits_{j\in\mathcal{N}(m)/n}q^{x'}_{mj}$
 
 # Sources
  * [1] M. C. Davey and D. MacKay, "Low-density parity check codes over GF(q)," in IEEE Communications Letters, vol. 2, no. 6, pp. 165-167, June 1998, doi: 10.1109/4234.681360.
