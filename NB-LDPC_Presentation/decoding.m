@@ -15,7 +15,7 @@ for i = 1:N
         H(randint(1,1,[1 M]),i) = randint(1,1,[0 q-1]); 
     end
 end
-
+H = gf(H,b); % Conver to a Galois field
 
 % Channel parameters
 s = 1;
@@ -24,8 +24,9 @@ R = K/N;
 SNR = s^2/(2*R*sigma^2);
 % Channel output
 y = normrnd(1, sigma, [1 N]);
-x = sign(y)
-x = mod(x+1,2); % convert to binary
+x = sign(y);
+x = (x==-1);
+
 
 % Decode
 q0 = zeros(M,N);
@@ -37,10 +38,10 @@ q3 = zeros(M,N);
 for i = 1:M
     for j = 1:N
         if H(i,j) ~= 0
-            q0(i,j) = (1-(1/(1+exp(2*s*abs(y(M,N))))))*(1-(1/(1+exp(2*s*abs(y(i,j))))));
-            q1(i,j) = (1-(1/(1+exp(2*s*abs(y(M,N))))))*(1/(1+exp(2*s*abs(y(i,j)))));
-            q2(i,j) = (1/(1+exp(2*s*abs(y(M,N)))))*(1-(1/(1+exp(2*s*abs(y(i,j))))));
-            q3(i,j) = (1/(1+exp(2*s*abs(y(M,N)))))*(1/(1+exp(2*s*abs(y(i,j)))));
+            q0(i,j) = (1-(1/(1+exp(2*s*abs(y(j))))))*(1-(1/(1+exp(2*s*abs(y(j))))));
+            q1(i,j) = (1-(1/(1+exp(2*s*abs(y(j))))))*(1/(1+exp(2*s*abs(y(j)))));
+            q2(i,j) = (1/(1+exp(2*s*abs(y(j)))))*(1-(1/(1+exp(2*s*abs(y(j))))));
+            q3(i,j) = (1/(1+exp(2*s*abs(y(j)))))*(1/(1+exp(2*s*abs(y(j)))));
         end
     end
 end
