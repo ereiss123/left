@@ -74,6 +74,22 @@ fontsize: '10pt'
     - If $H\hat{x} = z$ then the algorithm is complete
     - Else it repeats until a valid decoding is obtained or maximum number of iterations is met
 
+# GF(4)
+* Explicitly defined below
+||*
+|$\oplus$|a|b|c|d|
+|a|a|b|c|d|
+|b|b|c|d|a|
+|c|c|d|a|b|
+|d|d|a|b|c|
+||+
+|*|a|b|c|d|
+|a|a|a|a|a|
+|b|a|b|c|d|
+|c|a|c|d|c|
+|d|a|d|c|d|
+||*
+
 
 
 # Sources
