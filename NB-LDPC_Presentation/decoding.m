@@ -10,11 +10,22 @@ t = 3;
 H = zeros(M,N);
 
 % Generate some kind of parity check matrix, not really what is described in the paper
-for i = 1:N
-    for j = 1:t-1
-        H(randint(1,1,[1 M]),i) = randint(1,1,[0 q-1]); 
-    end
-end
+% for i = 1:N
+%     for j = 1:t-1
+%         H(randint(1,1,[1 M]),i) = randint(1,1,[0 q-1]); 
+%     end
+% end
+% 3,3 trapping set
+H = [
+    1 0 0 
+    0 2 0
+    0 0 1
+    2 0 1
+    0 1 3
+    3 1 0
+];
+
+
 H = gf(H,b); % Conver to a Galois field
 
 % Channel parameters

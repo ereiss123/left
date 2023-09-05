@@ -76,19 +76,26 @@ fontsize: '10pt'
 
 # GF(4)
 * Explicitly defined below
-||*
-|$\oplus$|a|b|c|d|
-|a|a|b|c|d|
-|b|b|c|d|a|
-|c|c|d|a|b|
-|d|d|a|b|c|
-||+
-|*|a|b|c|d|
-|a|a|a|a|a|
-|b|a|b|c|d|
-|c|a|c|d|c|
-|d|a|d|c|d|
-||*
+    - | **$\oplus$** | **a** | **b** | **c** | **d** |
+    |--------------|-------|-------|-------|-------|
+    | **a**        | a     | b     | c     | d     |
+    | **b**        | b     | c     | d     | a     |
+    | **c**        | c     | d     | a     | b     |
+    | **d**        | d     | a     | b     | c     |
+
+    - | **\*** | **a** | **b** | **c** | **d** |
+    |--------|-------|-------|-------|-------|
+    | **a**  | a     | a     | a     | a     |
+    | **b**  | a     | b     | c     | d     |
+    | **c**  | a     | c     | d     | c     |
+    | **d**  | a     | d     | c     | d     |
+
+# Example
+* Given a degree 3 check node, $m$, with noise symbols $n_1, n_2, n_3$:
+    - Let $H_{mn_1} = c$, $H_{mn_2} = c$, $H_{mn_3} = a$
+    - Let $x_{n_1} = d$, $x_{n_2} = b$, $x_{n_3} = a$
+* Initialize $q\limits_{mn}^a = f\limits_{n}^a$
+     - $q\limits_{mn}^a
 
 
 

@@ -39,6 +39,12 @@
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
 \newif\ifbibliography
+\usepackage{longtable,booktabs}
+\usepackage{caption}
+% These lines are needed to make table captions work with longtable:
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
 % Prevent slide breaks in the middle of a paragraph:
 \widowpenalties 1 10000
 \raggedbottom
@@ -370,6 +376,43 @@ and D. Mackay}
   \item
     Else it repeats until a valid decoding is obtained or maximum number
     of iterations is met
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{GF(4)}
+\protect\hypertarget{gf4}{}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Explicitly defined below
+
+  \begin{itemize}[<+->]
+  \item
+    \begin{longtable}[]{@{}lllll@{}}
+    \toprule
+    \textbf{\(\oplus\)} & \textbf{a} & \textbf{b} & \textbf{c} &
+    \textbf{d} \\
+    \midrule
+    \endhead
+    \textbf{a} & a & b & c & d \\
+    \textbf{b} & b & c & d & a \\
+    \textbf{c} & c & d & a & b \\
+    \textbf{d} & d & a & b & c \\
+    \bottomrule
+    \end{longtable}
+  \item
+    \begin{longtable}[]{@{}lllll@{}}
+    \toprule
+    \textbf{*} & \textbf{a} & \textbf{b} & \textbf{c} & \textbf{d} \\
+    \midrule
+    \endhead
+    \textbf{a} & a & a & a & a \\
+    \textbf{b} & a & b & c & d \\
+    \textbf{c} & a & c & d & c \\
+    \textbf{d} & a & d & c & d \\
+    \bottomrule
+    \end{longtable}
   \end{itemize}
 \end{itemize}
 \end{frame}
