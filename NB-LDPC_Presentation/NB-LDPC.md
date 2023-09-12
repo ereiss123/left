@@ -48,13 +48,13 @@ fontsize: '10pt'
 * Elements of $\textbf{z}$ are referred to as checks
 * Define $\mathcal{N}(m) = \{n:H_{mn}\neq 0\}$ as the set of symbols nodes, $n$, adjacent to check node $m$
 * Define $\mathcal{M}(n) = \{m:H_{mn}\neq 0\}$ as the set of check nodes, $m$, adjacent to symbol node $n$ 
-* For each non-zero entry in $H$, define $q_{mn}^a$ and $r_{mn}^a$ for $a\in GF(2^b)$
-    - $q_{mn}^a$ is the probability that symbol $n$ of $\textbf{x}$ is $a$
-    - $r_{mn}^a$ is the probability that check $m$ is satisfied if symbol $n$ of $\textbf{x}$ is fixed at $a$
+* For each non-zero entry in $H$, define $q_{mn}^{(a)}$ and $r_{mn}^{(a)}$ for $a\in GF(2^b)$
+    - $q_{mn}^{(a)}$ is the probability that symbol $n$ of $\textbf{x}$ is $a$
+    - $r_{mn}^{(a)}$ is the probability that check $m$ is satisfied if symbol $n$ of $\textbf{x}$ is fixed at $a$
 
 # Algorithm
-* Initialize $q_{mn}^a$ to $f^a_n$
-* Update $r_{mn}^a$ as  $r_{mn}^a = \sum\limits_{\textbf{x'}:x'_n=a}\text{Prob}[z_m|\textbf{x'}]\prod\limits_{j\in\mathcal{N}(m)/n}q^{x'_j}_{mj}$
+* Initialize $q_{mn}^{(a)}$ to $f^{(a)}_n$
+* Update $r_{mn}^{(a)}$ as  $r_{mn}^{(a)} = \sum\limits_{\textbf{x'}:x'_n=a}\text{Prob}[z_m|\textbf{x'}]\prod\limits_{j\in\mathcal{N}(m)/n}q^{x'_j}_{mj}$
     - $\text{Prob}[z_m|\textbf{x'}]\in [0,1]$ depending on if $\textbf{x'}$ satisfies check $m$
     - Davey and Mackay introduce some simplifications
     - Define $\sigma_{mk} := \sum_{j:j\le k} H_{mj}x'_j$
@@ -62,40 +62,60 @@ fontsize: '10pt'
     - Calculate Prob$[\sigma_{mk}=a]$ for each $a\in GF(2^b)$ and each $k\in \mathcal{N}(m)$ 
     - Prob$[\sigma_{mk}=a]$ = $\sum\limits_{s,t:H_{mj}t+s=a}\text{ Prob}[\sigma_{mi}=s]q^t_{mj}$ if $i,j$ are successive and $j>i$
     - $\rho_{mk}$ is calculated in a similiar way
-    - Then $r^a_{mn} = \text{ Prob}[(\sigma_{m(n-1)}+\rho_{m(n-1)})=z_m-H_{mn}a]$ 
-    - Expanded as $r^a_{mn} = \sum\limits_{s,t:s+t=z_m-H_{mn}a}\text{ Prob}[\sigma_{m(n-1)=s}] * \text{Prob}[\rho_{m(n+1)}=t]$
+    - Then $r^{(a)}_{mn} = \text{ Prob}[(\sigma_{m(n-1)}+\rho_{m(n-1)})=z_m-H_{mn}a]$ 
+    - Expanded as $r^{(a)}_{mn} = \sum\limits_{s,t:s+t=z_m-H_{mn}a}\text{ Prob}[\sigma_{m(n-1)=s}] * \text{Prob}[\rho_{m(n+1)}=t]$
 
 # Algorithm Cont.
-* Update $q^a_{mn}$
+* Update $q^{(a)}_{mn}$
     - Define $\alpha_{mn}$ as a weight
-    - $q^a_{mn} = \alpha_{mn} f^a_n\prod\limits_{j\in\mathcal{M}(n)\\m}r^a_{jn}$
-    - Select $\alpha_{mn}$ s.t. $\sum_{a=1}^q q^a_{mn} = 1$
+    - $q^{(a)}_{mn} = \alpha_{mn} f^a_n\prod\limits_{j\in\mathcal{M}(n)\\m}r^a_{jn}$
+    - Select $\alpha_{mn}$ s.t. $\sum_{a=1}^q q^{(a)}_{mn} = 1$
 * Make tentative decoding $\hat{x_n} = \text{argmax}(a)f^a_n\prod\limits_{j\in\mathcal{M}(n)}r^a_{jn}$
     - If $H\hat{x} = z$ then the algorithm is complete
     - Else it repeats until a valid decoding is obtained or maximum number of iterations is met
 
 # GF(4)
 * Explicitly defined below
-    - | **$\oplus$** | **a** | **b** | **c** | **d** |
+    - | **$\oplus$** | **$\gamma$** | **$\beta$** | **$\epsilon$** | **$\delta$** |
     |--------------|-------|-------|-------|-------|
-    | **a**        | a     | b     | c     | d     |
-    | **b**        | b     | c     | d     | a     |
-    | **c**        | c     | d     | a     | b     |
-    | **d**        | d     | a     | b     | c     |
+    | **$\gamma$**        | $\gamma$    | $\beta$    | $\epsilon$      | $\delta$      |
+    | **$\beta$**        | $\beta$    | $\epsilon$      | $\delta$      | $\gamma$    |
+    | **$\epsilon$**        | $\epsilon$      | $\delta$      | $\gamma$    | $\beta$    |
+    | **$\delta$**        | $\delta$      | $\gamma$    | $\beta$    | $\epsilon$      |
 
-    - | **\*** | **a** | **b** | **c** | **d** |
+    - | **$\cdot$** | **$\gamma$** | **$\beta$** | **$\epsilon$** | **$\delta$** |
     |--------|-------|-------|-------|-------|
-    | **a**  | a     | a     | a     | a     |
-    | **b**  | a     | b     | c     | d     |
-    | **c**  | a     | c     | d     | c     |
-    | **d**  | a     | d     | c     | d     |
+    | **$\gamma$**  | $\gamma$    | $\gamma$    | $\gamma$    | $\gamma$    |
+    | **$\beta$**  | $\gamma$    | $\beta$    | $\epsilon$     |  $\delta$    |
+    | **$\epsilon$**  | $\gamma$    | $\epsilon$     | $\delta$     | $\beta$     |
+    | **$\delta$**  | $\gamma$    | $\delta$     | $\beta$     | $\epsilon$     |
 
-# Example
+# Valid Combos for Degree 3 Check Node
+1. $\gamma$ $\delta$  $\beta$ 
+2. $\gamma$ $\epsilon$  $\epsilon$  
+3. $\gamma$ $\beta$  $\delta$  
+4. $\gamma$ $\gamma$ $\gamma$
+5. $\delta$  $\beta$  $\gamma$
+6. $\epsilon$  $\epsilon$  $\gamma$
+7. $\beta$  $\delta$  $\gamma$
+8. $\beta$  $\gamma$ $\delta$ 
+9. $\beta$  $\epsilon$  $\beta$ 
+10. $\beta$  $\beta$  $\epsilon$ 
+11. $\epsilon$  $\delta$  $\delta$ 
+12. $\delta$  $\epsilon$  $\delta$ 
+13. $\epsilon$  $\gamma$ $\epsilon$ 
+14. $\epsilon$  $\beta$  $\beta$  
+15. $\delta$  $\delta$  $\epsilon$ 
+16. $\delta$  $\gamma$ $\beta$ 
+
+# Parity Check Example
 * Given a degree 3 check node, $m$, with noise symbols $n_1, n_2, n_3$:
-    - Let $H_{mn_1} = c$, $H_{mn_2} = c$, $H_{mn_3} = a$
-    - Let $x_{n_1} = d$, $x_{n_2} = b$, $x_{n_3} = a$
-* Initialize $q\limits_{mn}^a = f\limits_{n}^a$
-     - $q\limits_{mn}^a
+    - Let $H_{mn_1} = \epsilon$, $H_{mn_2} = \beta$, $H_{mn_3} = \gamma$
+    - Let $x_{n_1} = \delta$, $x_{n_2} = \beta$, $x_{n_3} = \gamma$
+<!-- * Initialize $q_{mn}^{(a)} = f_{n}^a$
+    - Octave script to demonstrate -->
+* Calculate partial sums $\sigma_{mk}$ and $\rho_{mk}$
+    
 
 
 

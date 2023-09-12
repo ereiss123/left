@@ -294,16 +294,16 @@ and D. Mackay}
   Define \(\mathcal{M}(n) = \{m:H_{mn}\neq 0\}\) as the set of check
   nodes, \(m\), adjacent to symbol node \(n\)
 \item
-  For each non-zero entry in \(H\), define \(q_{mn}^a\) and \(r_{mn}^a\)
-  for \(a\in GF(2^b)\)
+  For each non-zero entry in \(H\), define \(q_{mn}^{(a)}\) and
+  \(r_{mn}^{(a)}\) for \(a\in GF(2^b)\)
 
   \begin{itemize}[<+->]
   \tightlist
   \item
-    \(q_{mn}^a\) is the probability that symbol \(n\) of \(\textbf{x}\)
-    is \(a\)
+    \(q_{mn}^{(a)}\) is the probability that symbol \(n\) of
+    \(\textbf{x}\) is \(a\)
   \item
-    \(r_{mn}^a\) is the probability that check \(m\) is satisfied if
+    \(r_{mn}^{(a)}\) is the probability that check \(m\) is satisfied if
     symbol \(n\) of \(\textbf{x}\) is fixed at \(a\)
   \end{itemize}
 \end{itemize}
@@ -314,10 +314,10 @@ and D. Mackay}
 \begin{itemize}[<+->]
 \tightlist
 \item
-  Initialize \(q_{mn}^a\) to \(f^a_n\)
+  Initialize \(q_{mn}^{(a)}\) to \(f^{(a)}_n\)
 \item
-  Update \(r_{mn}^a\) as
-  \(r_{mn}^a = \sum\limits_{\textbf{x'}:x'_n=a}\text{Prob}[z_m|\textbf{x'}]\prod\limits_{j\in\mathcal{N}(m)/n}q^{x'_j}_{mj}\)
+  Update \(r_{mn}^{(a)}\) as
+  \(r_{mn}^{(a)} = \sum\limits_{\textbf{x'}:x'_n=a}\text{Prob}[z_m|\textbf{x'}]\prod\limits_{j\in\mathcal{N}(m)/n}q^{x'_j}_{mj}\)
 
   \begin{itemize}[<+->]
   \tightlist
@@ -341,10 +341,10 @@ and D. Mackay}
     \(\rho_{mk}\) is calculated in a similiar way
   \item
     Then
-    \(r^a_{mn} = \text{ Prob}[(\sigma_{m(n-1)}+\rho_{m(n-1)})=z_m-H_{mn}a]\)
+    \(r^{(a)}_{mn} = \text{ Prob}[(\sigma_{m(n-1)}+\rho_{m(n-1)})=z_m-H_{mn}a]\)
   \item
     Expanded as
-    \(r^a_{mn} = \sum\limits_{s,t:s+t=z_m-H_{mn}a}\text{ Prob}[\sigma_{m(n-1)=s}] * \text{Prob}[\rho_{m(n+1)}=t]\)
+    \(r^{(a)}_{mn} = \sum\limits_{s,t:s+t=z_m-H_{mn}a}\text{ Prob}[\sigma_{m(n-1)=s}] * \text{Prob}[\rho_{m(n+1)}=t]\)
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -354,16 +354,16 @@ and D. Mackay}
 \begin{itemize}[<+->]
 \tightlist
 \item
-  Update \(q^a_{mn}\)
+  Update \(q^{(a)}_{mn}\)
 
   \begin{itemize}[<+->]
   \tightlist
   \item
     Define \(\alpha_{mn}\) as a weight
   \item
-    \(q^a_{mn} = \alpha_{mn} f^a_n\prod\limits_{j\in\mathcal{M}(n)\\m}r^a_{jn}\)
+    \(q^{(a)}_{mn} = \alpha_{mn} f^a_n\prod\limits_{j\in\mathcal{M}(n)\\m}r^a_{jn}\)
   \item
-    Select \(\alpha_{mn}\) s.t. \(\sum_{a=1}^q q^a_{mn} = 1\)
+    Select \(\alpha_{mn}\) s.t. \(\sum_{a=1}^q q^{(a)}_{mn} = 1\)
   \end{itemize}
 \item
   Make tentative decoding
@@ -391,29 +391,98 @@ and D. Mackay}
   \item
     \begin{longtable}[]{@{}lllll@{}}
     \toprule
-    \textbf{\(\oplus\)} & \textbf{a} & \textbf{b} & \textbf{c} &
-    \textbf{d} \\
+    \textbf{\(\oplus\)} & \textbf{\(\gamma\)} & \textbf{\(\beta\)} &
+    \textbf{\(\epsilon\)} & \textbf{\(\delta\)} \\
     \midrule
     \endhead
-    \textbf{a} & a & b & c & d \\
-    \textbf{b} & b & c & d & a \\
-    \textbf{c} & c & d & a & b \\
-    \textbf{d} & d & a & b & c \\
+    \textbf{\(\gamma\)} & \(\gamma\) & \(\beta\) & \(\epsilon\) &
+    \(\delta\) \\
+    \textbf{\(\beta\)} & \(\beta\) & \(\epsilon\) & \(\delta\) &
+    \(\gamma\) \\
+    \textbf{\(\epsilon\)} & \(\epsilon\) & \(\delta\) & \(\gamma\) &
+    \(\beta\) \\
+    \textbf{\(\delta\)} & \(\delta\) & \(\gamma\) & \(\beta\) &
+    \(\epsilon\) \\
     \bottomrule
     \end{longtable}
   \item
     \begin{longtable}[]{@{}lllll@{}}
     \toprule
-    \textbf{*} & \textbf{a} & \textbf{b} & \textbf{c} & \textbf{d} \\
+    \textbf{\(\cdot\)} & \textbf{\(\gamma\)} & \textbf{\(\beta\)} &
+    \textbf{\(\epsilon\)} & \textbf{\(\delta\)} \\
     \midrule
     \endhead
-    \textbf{a} & a & a & a & a \\
-    \textbf{b} & a & b & c & d \\
-    \textbf{c} & a & c & d & c \\
-    \textbf{d} & a & d & c & d \\
+    \textbf{\(\gamma\)} & \(\gamma\) & \(\gamma\) & \(\gamma\) &
+    \(\gamma\) \\
+    \textbf{\(\beta\)} & \(\gamma\) & \(\beta\) & \(\epsilon\) &
+    \(\delta\) \\
+    \textbf{\(\epsilon\)} & \(\gamma\) & \(\epsilon\) & \(\delta\) &
+    \(\beta\) \\
+    \textbf{\(\delta\)} & \(\gamma\) & \(\delta\) & \(\beta\) &
+    \(\epsilon\) \\
     \bottomrule
     \end{longtable}
   \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Valid Combos for Degree 3 Check Node}
+\protect\hypertarget{valid-combos-for-degree-3-check-node}{}
+\begin{enumerate}[<+->]
+\tightlist
+\item
+  \(\gamma\) \(\delta\) \(\beta\)
+\item
+  \(\gamma\) \(\epsilon\) \(\epsilon\)\\
+\item
+  \(\gamma\) \(\beta\) \(\delta\)\\
+\item
+  \(\gamma\) \(\gamma\) \(\gamma\)
+\item
+  \(\delta\) \(\beta\) \(\gamma\)
+\item
+  \(\epsilon\) \(\epsilon\) \(\gamma\)
+\item
+  \(\beta\) \(\delta\) \(\gamma\)
+\item
+  \(\beta\) \(\gamma\) \(\delta\)
+\item
+  \(\beta\) \(\epsilon\) \(\beta\)
+\item
+  \(\beta\) \(\beta\) \(\epsilon\)
+\item
+  \(\epsilon\) \(\delta\) \(\delta\)
+\item
+  \(\delta\) \(\epsilon\) \(\delta\)
+\item
+  \(\epsilon\) \(\gamma\) \(\epsilon\)
+\item
+  \(\epsilon\) \(\beta\) \(\beta\)\\
+\item
+  \(\delta\) \(\delta\) \(\epsilon\)
+\item
+  \(\delta\) \(\gamma\) \(\beta\)
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Parity Check Example}
+\protect\hypertarget{parity-check-example}{}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Given a degree 3 check node, \(m\), with noise symbols
+  \(n_1, n_2, n_3\):
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Let \(H_{mn_1} = \epsilon\), \(H_{mn_2} = \beta\),
+    \(H_{mn_3} = \gamma\)
+  \item
+    Let \(x_{n_1} = \delta\), \(x_{n_2} = \beta\), \(x_{n_3} = \gamma\)
+  \end{itemize}
+\item
+  Calculate partial sums \(\sigma_{mk}\) and \(\rho_{mk}\)
 \end{itemize}
 \end{frame}
 

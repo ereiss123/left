@@ -111,18 +111,18 @@ Eric Reiss
 <li>Elements of <span class="math inline">\textbf{z}</span> are referred to as checks</li>
 <li>Define <span class="math inline">\mathcal{N}(m) = \{n:H_{mn}\neq 0\}</span> as the set of symbols nodes, <span class="math inline">n</span>, adjacent to check node <span class="math inline">m</span></li>
 <li>Define <span class="math inline">\mathcal{M}(n) = \{m:H_{mn}\neq 0\}</span> as the set of check nodes, <span class="math inline">m</span>, adjacent to symbol node <span class="math inline">n</span></li>
-<li>For each non-zero entry in <span class="math inline">H</span>, define <span class="math inline">q_{mn}^a</span> and <span class="math inline">r_{mn}^a</span> for <span class="math inline">a\in GF(2^b)</span>
+<li>For each non-zero entry in <span class="math inline">H</span>, define <span class="math inline">q_{mn}^{(a)}</span> and <span class="math inline">r_{mn}^{(a)}</span> for <span class="math inline">a\in GF(2^b)</span>
 <ul class="incremental">
-<li><span class="math inline">q_{mn}^a</span> is the probability that symbol <span class="math inline">n</span> of <span class="math inline">\textbf{x}</span> is <span class="math inline">a</span></li>
-<li><span class="math inline">r_{mn}^a</span> is the probability that check <span class="math inline">m</span> is satisfied if symbol <span class="math inline">n</span> of <span class="math inline">\textbf{x}</span> is fixed at <span class="math inline">a</span></li>
+<li><span class="math inline">q_{mn}^{(a)}</span> is the probability that symbol <span class="math inline">n</span> of <span class="math inline">\textbf{x}</span> is <span class="math inline">a</span></li>
+<li><span class="math inline">r_{mn}^{(a)}</span> is the probability that check <span class="math inline">m</span> is satisfied if symbol <span class="math inline">n</span> of <span class="math inline">\textbf{x}</span> is fixed at <span class="math inline">a</span></li>
 </ul></li>
 </ul>
 </div>
 <div id="algorithm" class="slide section level1">
 <h1>Algorithm</h1>
 <ul class="incremental">
-<li>Initialize <span class="math inline">q_{mn}^a</span> to <span class="math inline">f^a_n</span></li>
-<li>Update <span class="math inline">r_{mn}^a</span> as <span class="math inline">r_{mn}^a = \sum\limits_{\textbf{x&#39;}:x&#39;_n=a}\text{Prob}[z_m|\textbf{x&#39;}]\prod\limits_{j\in\mathcal{N}(m)/n}q^{x&#39;_j}_{mj}</span>
+<li>Initialize <span class="math inline">q_{mn}^{(a)}</span> to <span class="math inline">f^{(a)}_n</span></li>
+<li>Update <span class="math inline">r_{mn}^{(a)}</span> as <span class="math inline">r_{mn}^{(a)} = \sum\limits_{\textbf{x&#39;}:x&#39;_n=a}\text{Prob}[z_m|\textbf{x&#39;}]\prod\limits_{j\in\mathcal{N}(m)/n}q^{x&#39;_j}_{mj}</span>
 <ul class="incremental">
 <li><span class="math inline">\text{Prob}[z_m|\textbf{x&#39;}]\in [0,1]</span> depending on if <span class="math inline">\textbf{x&#39;}</span> satisfies check <span class="math inline">m</span></li>
 <li>Davey and Mackay introduce some simplifications</li>
@@ -131,19 +131,19 @@ Eric Reiss
 <li>Calculate Prob<span class="math inline">[\sigma_{mk}=a]</span> for each <span class="math inline">a\in GF(2^b)</span> and each <span class="math inline">k\in \mathcal{N}(m)</span></li>
 <li>Prob<span class="math inline">[\sigma_{mk}=a]</span> = <span class="math inline">\sum\limits_{s,t:H_{mj}t+s=a}\text{ Prob}[\sigma_{mi}=s]q^t_{mj}</span> if <span class="math inline">i,j</span> are successive and <span class="math inline">j&gt;i</span></li>
 <li><span class="math inline">\rho_{mk}</span> is calculated in a similiar way</li>
-<li>Then <span class="math inline">r^a_{mn} = \text{ Prob}[(\sigma_{m(n-1)}+\rho_{m(n-1)})=z_m-H_{mn}a]</span></li>
-<li>Expanded as <span class="math inline">r^a_{mn} = \sum\limits_{s,t:s+t=z_m-H_{mn}a}\text{ Prob}[\sigma_{m(n-1)=s}] * \text{Prob}[\rho_{m(n+1)}=t]</span></li>
+<li>Then <span class="math inline">r^{(a)}_{mn} = \text{ Prob}[(\sigma_{m(n-1)}+\rho_{m(n-1)})=z_m-H_{mn}a]</span></li>
+<li>Expanded as <span class="math inline">r^{(a)}_{mn} = \sum\limits_{s,t:s+t=z_m-H_{mn}a}\text{ Prob}[\sigma_{m(n-1)=s}] * \text{Prob}[\rho_{m(n+1)}=t]</span></li>
 </ul></li>
 </ul>
 </div>
 <div id="algorithm-cont." class="slide section level1">
 <h1>Algorithm Cont.</h1>
 <ul class="incremental">
-<li>Update <span class="math inline">q^a_{mn}</span>
+<li>Update <span class="math inline">q^{(a)}_{mn}</span>
 <ul class="incremental">
 <li>Define <span class="math inline">\alpha_{mn}</span> as a weight</li>
-<li><span class="math inline">q^a_{mn} = \alpha_{mn} f^a_n\prod\limits_{j\in\mathcal{M}(n)\\m}r^a_{jn}</span></li>
-<li>Select <span class="math inline">\alpha_{mn}</span> s.t. <span class="math inline">\sum_{a=1}^q q^a_{mn} = 1</span></li>
+<li><span class="math inline">q^{(a)}_{mn} = \alpha_{mn} f^a_n\prod\limits_{j\in\mathcal{M}(n)\\m}r^a_{jn}</span></li>
+<li>Select <span class="math inline">\alpha_{mn}</span> s.t. <span class="math inline">\sum_{a=1}^q q^{(a)}_{mn} = 1</span></li>
 </ul></li>
 <li>Make tentative decoding <span class="math inline">\hat{x_n} = \text{argmax}(a)f^a_n\prod\limits_{j\in\mathcal{M}(n)}r^a_{jn}</span>
 <ul class="incremental">
@@ -157,89 +157,139 @@ Eric Reiss
 <ul class="incremental">
 <li>Explicitly defined below
 <ul class="incremental">
-<li><table>
+<li><table style="width:100%;">
+<colgroup>
+<col width="33%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th><strong><span class="math inline">\oplus</span></strong></th>
-<th><strong>a</strong></th>
-<th><strong>b</strong></th>
-<th><strong>c</strong></th>
-<th><strong>d</strong></th>
+<th><strong><span class="math inline">\gamma</span></strong></th>
+<th><strong><span class="math inline">\beta</span></strong></th>
+<th><strong><span class="math inline">\epsilon</span></strong></th>
+<th><strong><span class="math inline">\delta</span></strong></th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>a</strong></td>
-<td>a</td>
-<td>b</td>
-<td>c</td>
-<td>d</td>
+<td><strong><span class="math inline">\gamma</span></strong></td>
+<td><span class="math inline">\gamma</span></td>
+<td><span class="math inline">\beta</span></td>
+<td><span class="math inline">\epsilon</span></td>
+<td><span class="math inline">\delta</span></td>
 </tr>
 <tr class="even">
-<td><strong>b</strong></td>
-<td>b</td>
-<td>c</td>
-<td>d</td>
-<td>a</td>
+<td><strong><span class="math inline">\beta</span></strong></td>
+<td><span class="math inline">\beta</span></td>
+<td><span class="math inline">\epsilon</span></td>
+<td><span class="math inline">\delta</span></td>
+<td><span class="math inline">\gamma</span></td>
 </tr>
 <tr class="odd">
-<td><strong>c</strong></td>
-<td>c</td>
-<td>d</td>
-<td>a</td>
-<td>b</td>
+<td><strong><span class="math inline">\epsilon</span></strong></td>
+<td><span class="math inline">\epsilon</span></td>
+<td><span class="math inline">\delta</span></td>
+<td><span class="math inline">\gamma</span></td>
+<td><span class="math inline">\beta</span></td>
 </tr>
 <tr class="even">
-<td><strong>d</strong></td>
-<td>d</td>
-<td>a</td>
-<td>b</td>
-<td>c</td>
+<td><strong><span class="math inline">\delta</span></strong></td>
+<td><span class="math inline">\delta</span></td>
+<td><span class="math inline">\gamma</span></td>
+<td><span class="math inline">\beta</span></td>
+<td><span class="math inline">\epsilon</span></td>
 </tr>
 </tbody>
 </table></li>
-<li><table>
+<li><table style="width:100%;">
+<colgroup>
+<col width="22%" />
+<col width="19%" />
+<col width="19%" />
+<col width="19%" />
+<col width="19%" />
+</colgroup>
 <thead>
 <tr class="header">
-<th><strong>*</strong></th>
-<th><strong>a</strong></th>
-<th><strong>b</strong></th>
-<th><strong>c</strong></th>
-<th><strong>d</strong></th>
+<th><strong><span class="math inline">\cdot</span></strong></th>
+<th><strong><span class="math inline">\gamma</span></strong></th>
+<th><strong><span class="math inline">\beta</span></strong></th>
+<th><strong><span class="math inline">\epsilon</span></strong></th>
+<th><strong><span class="math inline">\delta</span></strong></th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>a</strong></td>
-<td>a</td>
-<td>a</td>
-<td>a</td>
-<td>a</td>
+<td><strong><span class="math inline">\gamma</span></strong></td>
+<td><span class="math inline">\gamma</span></td>
+<td><span class="math inline">\gamma</span></td>
+<td><span class="math inline">\gamma</span></td>
+<td><span class="math inline">\gamma</span></td>
 </tr>
 <tr class="even">
-<td><strong>b</strong></td>
-<td>a</td>
-<td>b</td>
-<td>c</td>
-<td>d</td>
+<td><strong><span class="math inline">\beta</span></strong></td>
+<td><span class="math inline">\gamma</span></td>
+<td><span class="math inline">\beta</span></td>
+<td><span class="math inline">\epsilon</span></td>
+<td><span class="math inline">\delta</span></td>
 </tr>
 <tr class="odd">
-<td><strong>c</strong></td>
-<td>a</td>
-<td>c</td>
-<td>d</td>
-<td>c</td>
+<td><strong><span class="math inline">\epsilon</span></strong></td>
+<td><span class="math inline">\gamma</span></td>
+<td><span class="math inline">\epsilon</span></td>
+<td><span class="math inline">\delta</span></td>
+<td><span class="math inline">\beta</span></td>
 </tr>
 <tr class="even">
-<td><strong>d</strong></td>
-<td>a</td>
-<td>d</td>
-<td>c</td>
-<td>d</td>
+<td><strong><span class="math inline">\delta</span></strong></td>
+<td><span class="math inline">\gamma</span></td>
+<td><span class="math inline">\delta</span></td>
+<td><span class="math inline">\beta</span></td>
+<td><span class="math inline">\epsilon</span></td>
 </tr>
 </tbody>
 </table></li>
 </ul></li>
+</ul>
+</div>
+<div id="valid-combos-for-degree-3-check-node" class="slide section level1">
+<h1>Valid Combos for Degree 3 Check Node</h1>
+<ol class="incremental" style="list-style-type: decimal">
+<li><span class="math inline">\gamma</span> <span class="math inline">\delta</span> <span class="math inline">\beta</span></li>
+<li><span class="math inline">\gamma</span> <span class="math inline">\epsilon</span> <span class="math inline">\epsilon</span><br />
+</li>
+<li><span class="math inline">\gamma</span> <span class="math inline">\beta</span> <span class="math inline">\delta</span><br />
+</li>
+<li><span class="math inline">\gamma</span> <span class="math inline">\gamma</span> <span class="math inline">\gamma</span></li>
+<li><span class="math inline">\delta</span> <span class="math inline">\beta</span> <span class="math inline">\gamma</span></li>
+<li><span class="math inline">\epsilon</span> <span class="math inline">\epsilon</span> <span class="math inline">\gamma</span></li>
+<li><span class="math inline">\beta</span> <span class="math inline">\delta</span> <span class="math inline">\gamma</span></li>
+<li><span class="math inline">\beta</span> <span class="math inline">\gamma</span> <span class="math inline">\delta</span></li>
+<li><span class="math inline">\beta</span> <span class="math inline">\epsilon</span> <span class="math inline">\beta</span></li>
+<li><span class="math inline">\beta</span> <span class="math inline">\beta</span> <span class="math inline">\epsilon</span></li>
+<li><span class="math inline">\epsilon</span> <span class="math inline">\delta</span> <span class="math inline">\delta</span></li>
+<li><span class="math inline">\delta</span> <span class="math inline">\epsilon</span> <span class="math inline">\delta</span></li>
+<li><span class="math inline">\epsilon</span> <span class="math inline">\gamma</span> <span class="math inline">\epsilon</span></li>
+<li><span class="math inline">\epsilon</span> <span class="math inline">\beta</span> <span class="math inline">\beta</span><br />
+</li>
+<li><span class="math inline">\delta</span> <span class="math inline">\delta</span> <span class="math inline">\epsilon</span></li>
+<li><span class="math inline">\delta</span> <span class="math inline">\gamma</span> <span class="math inline">\beta</span></li>
+</ol>
+</div>
+<div id="parity-check-example" class="slide section level1">
+<h1>Parity Check Example</h1>
+<ul class="incremental">
+<li>Given a degree 3 check node, <span class="math inline">m</span>, with noise symbols <span class="math inline">n_1, n_2, n_3</span>:
+<ul class="incremental">
+<li>Let <span class="math inline">H_{mn_1} = \epsilon</span>, <span class="math inline">H_{mn_2} = \beta</span>, <span class="math inline">H_{mn_3} = \gamma</span></li>
+<li>Let <span class="math inline">x_{n_1} = \delta</span>, <span class="math inline">x_{n_2} = \beta</span>, <span class="math inline">x_{n_3} = \gamma</span> <!-- * Initialize $q_{mn}^{(a)} = f_{n}^a$
+  - Octave script to demonstrate --></li>
+</ul></li>
+<li>Calculate partial sums <span class="math inline">\sigma_{mk}</span> and <span class="math inline">\rho_{mk}</span></li>
 </ul>
 </div>
 <div id="sources" class="slide section level1">
